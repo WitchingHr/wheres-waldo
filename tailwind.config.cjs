@@ -19,11 +19,24 @@ module.exports = {
           '63%': { height: '84px' },
           '76%': { height: '84px' },
           '100%': { height: '126px' },
+        },
+        incorrect: {
+          '20%': { color: 'red', transform: 'rotate(2deg)' },
+          '40%': { transform: 'rotate(-2deg)'},
+          '60%': { transform: 'rotate(2deg)' },
+          '80%': { transform: 'rotate(-2deg)'},
+        },
+        correct: {
+          '20%': { color: 'green', transform: 'translateY(4px)' },
+          '40%': { color: 'green', transform: 'translateY(0px)' },
+          '60%': { color: 'green' },
         }
       },
       animation: {
         slide: 'slide 0.5s ease-out',
-        open: 'open 0.3s linear'
+        open: 'open 0.3s linear',
+        incorrect: 'incorrect 0.5s ease-out',
+        correct: 'correct 0.5s ease-out'
       }
     },
   },

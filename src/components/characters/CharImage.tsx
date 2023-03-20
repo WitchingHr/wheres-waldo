@@ -11,8 +11,7 @@ const CharImage: FC<CharImageProps> = ({ src, char }) => {
 			src={src}
 			alt=""
 			className={
-				(char === false && "opacity-40 ") +
-				"h-full cursor-pointer hover:opacity-100"
+				"h-full " + (char === false && "opacity-40")
 			}
 		/>
 	);
