@@ -26,7 +26,7 @@ const Picker: FC<PickerProps> = ({ clickPos, view }) => {
 		<div
 			className={
 				(view ? "block " : "hidden ") +
-				"absolute mx-2 w-40 rounded-md border bg-slate-100 p-1 shadow-xl"
+				"animate-open overflow-hidden absolute mx-2 w-40 rounded-md border bg-slate-100 p-1 shadow-xl"
 			}
 			style={{ top: `${y}px`, left: `${x}px` }}
 		>
