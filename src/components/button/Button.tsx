@@ -1,12 +1,15 @@
-import React, { FC, Fragment } from "react";
+import React, { FC } from "react";
 
-type ButtonProps = {
+// Types
+interface ButtonProps {
 	name: number;
 	level: number | null;
 	handleClick: () => void;
-};
+}
 
-const Button: FC<ButtonProps> = ({ name, level, handleClick }) => {
+// LevelButton component:
+// - sets level
+const LevelButton: FC<ButtonProps> = ({ name, level, handleClick }) => {
 	return (
 		<>
 			{level !== name ? (
@@ -26,4 +29,4 @@ const Button: FC<ButtonProps> = ({ name, level, handleClick }) => {
 	);
 };
 
-export default Button;
+export default LevelButton;

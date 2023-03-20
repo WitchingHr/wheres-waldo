@@ -4,7 +4,7 @@ import React, { FC, useState, useRef, RefObject } from "react";
 import Picker from "../picker/Picker";
 import picture from "../../assets/1.jpg";
 
-// Type
+// Types
 export interface Position {
 	x: number;
 	y: number;
@@ -31,6 +31,7 @@ const usePositionOffset = (
 	return { x: x, y: y };
 };
 
+// Filler Data for Development
 const locations = [
 	{ char: "Waldo", location: [656, 267] },
 	{ char: "Odlaw", location: [113, 254] },
@@ -38,7 +39,7 @@ const locations = [
 ];
 
 // Board component:
-// Wraps the image and the character Picker modal
+// - wraps the level image and the character Picker modal
 const Board: FC = () => {
 	// Sets modal location to click position
 	const [clickPos, setClickPos] = useState<Position>({ x: 0, y: 0 });

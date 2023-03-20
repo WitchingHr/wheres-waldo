@@ -1,4 +1,11 @@
-import React, { FC, Dispatch, SetStateAction, useContext, useRef } from "react";
+import React, {
+	FC,
+	Dispatch,
+	SetStateAction,
+	useContext,
+	useRef,
+	RefObject,
+} from "react";
 
 // Pics
 import waldoImg from "../../assets/Waldo.jpg";
@@ -13,7 +20,6 @@ const usePic = (char: string) => {
 
 // Types
 import { Position } from "../board/Board";
-
 interface PickerButtonProps {
 	char: string;
 	location: number[];
@@ -30,8 +36,37 @@ const useObjectiveContext = () => {
 	return context;
 };
 
+// On correct => animate button, close modal
+const useCorrect = (
+	ref: RefObject<HTMLButtonElement>,
+	fn: Dispatch<SetStateAction<boolean>>
+) => {
+	if (ref.current !== null) {
+		ref.current.classList.toggle("animate-correct");
+		setTimeout(() => {
+			if (ref.current !== null) {
+				ref.current.classList.toggle("animate-correct");
+				fn(false);
+			}
+		}, 500);
+	}
+};
+
+// On incorrect => animate button
+const useIncorrect = (ref: RefObject<HTMLButtonElement>) => {
+	if (ref.current !== null) {
+		ref.current.classList.toggle("animate-incorrect");
+		setTimeout(() => {
+			if (ref.current !== null) {
+				ref.current.classList.toggle("animate-incorrect");
+			}
+		}, 600);
+	}
+};
+
 // PickerButton component:
-// Button containing image and name of character
+// - button containing image and name of character,
+// - stateful logic for selecting character
 const PickerButton: FC<PickerButtonProps> = ({
 	char,
 	location,
@@ -41,42 +76,28 @@ const PickerButton: FC<PickerButtonProps> = ({
 	// Get objective from context
 	const { objective, setObjective } = useObjectiveContext();
 
-  // Get image src
+	// Get image src
 	const src = usePic(char);
-  
+
 	const buttonRef = useRef<HTMLButtonElement>(null);
 
+	// Click position
 	const { x, y } = clickPos;
 
 	const handleClick = () => {
-    // Character coordinates
+		// Character coordinates
 		const [xChar, yChar] = location;
 
-		// If correct, update objective state and close modal
+		// If correct, update objective state, animate button and close modal
 		if (Math.abs(xChar - x) < 30 && Math.abs(yChar - y) < 30) {
 			setObjective({
 				...objective,
 				[char]: true,
 			});
-			if (buttonRef.current !== null) {
-				buttonRef.current.classList.toggle('animate-correct');
-        setTimeout(() => {
-          if (buttonRef.current !== null) {
-            buttonRef.current.classList.toggle('animate-correct');
-            setView(false);
-          }
-        }, 500);
-			}
+			useCorrect(buttonRef, setView);
 		} else {
-      // If wrong, animate button
-			if (buttonRef.current !== null) {
-				buttonRef.current.classList.toggle('animate-incorrect');
-        setTimeout(() => {
-          if (buttonRef.current !== null) {
-            buttonRef.current.classList.toggle('animate-incorrect');
-          }
-        }, 600);
-			}
+			// If incorrect, animate button
+			useIncorrect(buttonRef);
 		}
 	};
 

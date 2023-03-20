@@ -9,16 +9,16 @@ import React, {
 
 // Components
 import Board from "./components/board/Board";
-import Button from "./components/button/Button";
+import LevelButton from "./components/button/Button";
 import Characters from "./components/characters/Characters";
 
 const levelArr: number[] = [1, 2, 3, 4, 5, 6];
 
 // Types
-interface Objective {
-	waldo: boolean;
-	odlaw: boolean;
-	wizard: boolean;
+export interface Objective {
+	Waldo: boolean;
+	Odlaw: boolean;
+	Wizard: boolean;
 }
 
 interface ObjectiveCon {
@@ -30,13 +30,13 @@ interface ObjectiveCon {
 export const ObjectiveContext = createContext<ObjectiveCon | null>(null);
 
 // App component:
-// Fetches data and holds objective state
+// - fetches data and holds objective state
 const App: FC = () => {
 	const [level, setLevel] = useState<number | null>(null);
 	const [objective, setObjective] = useState<Objective>({
-		waldo: false,
-		odlaw: false,
-		wizard: false,
+		Waldo: false,
+		Odlaw: false,
+		Wizard: false,
 	});
 
 	// Check if round is complete
@@ -58,7 +58,7 @@ const App: FC = () => {
 						{levelArr.map((num) => {
 							return (
 								<li key={num}>
-									<Button
+									<LevelButton
 										name={num}
 										level={level}
 										handleClick={() => setLevel(num)}

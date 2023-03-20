@@ -5,7 +5,6 @@ import PickerButton from "./PickerButton";
 
 // Types
 import { Position } from "../board/Board";
-
 interface PickerProps {
 	clickPos: Position;
 	view: boolean;
@@ -14,7 +13,7 @@ interface PickerProps {
 }
 
 // Picker component:
-// Contains buttons for each character for selecting your choice
+// - contains buttons for each character for selecting your choice
 const Picker: FC<PickerProps> = ({ clickPos, view, setView, locations }) => {
 	const { x, y } = clickPos;
 
