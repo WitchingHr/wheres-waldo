@@ -43,7 +43,6 @@ const App: FC = () => {
 	useEffect(() => {
 		const values = Object.values(objective);
 		if (values.every((value) => value === true)) {
-			alert("You win!");
 			// TODO: Add state for round complete
 		}
 	}, [objective]);

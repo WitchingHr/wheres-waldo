@@ -18,18 +18,18 @@ module.exports = {
           '38%': { height: '44px' },
           '63%': { height: '84px' },
           '76%': { height: '84px' },
-          '100%': { height: '126px' },
+          '100%': { height: '126px' }
         },
         incorrect: {
           '20%': { color: 'red', transform: 'rotate(2deg)' },
           '40%': { transform: 'rotate(-2deg)'},
           '60%': { transform: 'rotate(2deg)' },
-          '80%': { transform: 'rotate(-2deg)'},
+          '80%': { transform: 'rotate(-2deg)'}
         },
         correct: {
           '20%': { color: 'green', transform: 'translateY(4px)' },
           '40%': { color: 'green', transform: 'translateY(0px)' },
-          '60%': { color: 'green' },
+          '60%': { color: 'green' }
         }
       },
       animation: {
