@@ -13,7 +13,7 @@ interface PickerProps {
 }
 
 // Picker component:
-// - contains buttons for each character for selecting your choice
+// contains buttons for each character for selecting your choice
 const Picker: FC<PickerProps> = ({ clickPos, view, setView, locations }) => {
 	const { x, y } = clickPos;
 

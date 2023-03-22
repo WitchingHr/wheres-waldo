@@ -7,6 +7,23 @@ import React, {
 	useEffect,
 } from "react";
 
+// Data
+import { colRef, getDocs } from './firebase';
+const data: Data[] = [];
+const useData = () => {
+	getDocs(colRef)
+		.then((snapshot) => {
+			console.log(snapshot.docs)
+			snapshot.docs.forEach((doc) => {
+				data.push({...doc.data()})
+			})
+			console.log(data);
+		})
+		.catch((err) => {
+			console.log(err.message);
+		});
+}
+
 // Components
 import Board from "./components/board/Board";
 import LevelButton from "./components/button/Button";
@@ -21,6 +38,13 @@ export interface Objective {
 	Wizard: boolean;
 }
 
+export interface Data {
+	img: string;
+	waldo: [string, number, number];
+	odlaw: [string, number, number];
+	wizard: [string, number, number];
+}
+
 interface ObjectiveCon {
 	objective: Objective;
 	setObjective: Dispatch<SetStateAction<Objective>>;
@@ -30,7 +54,6 @@ interface ObjectiveCon {
 export const ObjectiveContext = createContext<ObjectiveCon | null>(null);
 
 // App component:
-// - fetches data and holds objective state
 const App: FC = () => {
 	const [level, setLevel] = useState<number | null>(null);
 	const [objective, setObjective] = useState<Objective>({
@@ -39,6 +62,10 @@ const App: FC = () => {
 		Wizard: false,
 	});
 
+	useEffect(() => {
+		useData();
+	}, []);
+
 	// Check if round is complete
 	useEffect(() => {
 		const values = Object.values(objective);
@@ -46,8 +73,6 @@ const App: FC = () => {
 			// TODO: Add state for round complete
 		}
 	}, [objective]);
-
-	// TODO: Add Effect that watches level state to fetch data
 
 	return (
 		<ObjectiveContext.Provider value={{ objective, setObjective }}>
@@ -68,7 +93,11 @@ const App: FC = () => {
 					</ul>
 					<Characters objective={objective} />
 				</div>
-				<Board />
+				{level === null ? (
+					<div>Select a level to begin...</div>
+				) : (
+					<Board data={data} level={level} />
+				)}
 			</div>
 		</ObjectiveContext.Provider>
 	);

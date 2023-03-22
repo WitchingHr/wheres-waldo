@@ -1,21 +1,31 @@
-import React, { FC, useState, useRef, RefObject, useEffect } from "react";
+import React, { FC, useState, useRef, RefObject, useEffect, useLayoutEffect } from "react";
 
 // Components and Assets
 import Picker from "../picker/Picker";
-import picture from "../../assets/1.jpg";
 
 // Types
+import { Data } from "../../App";
+interface BoardProps {
+	data: Data[];
+	level: number;
+}
+
 export interface Position {
 	x: number;
 	y: number;
 }
 
-// Filler Data for Development
-let locations = [
-	{ char: "Waldo", location: [625, 256] },
-	{ char: "Odlaw", location: [109, 242] },
-	{ char: "Wizard", location: [273, 242] },
-];
+let locations: { char: string, location: number[] }[] = [];
+
+const useDataSort = (data: Data[], level: number): string => {
+	const d = data[level];
+	locations = [
+		{ char: d.waldo[0], location: [d.waldo[1], d.waldo[2]]},
+		{ char: d.odlaw[0], location: [d.odlaw[1], d.odlaw[2]]},
+		{ char: d.wizard[0], location: [d.wizard[1], d.wizard[2]]}
+	];
+	return d.img;
+}
 
 // Offsets modal position if click is near edge of container
 const usePositionOffset = (
@@ -80,20 +90,29 @@ const updateCoordinatesOnResize = (
 
 // Board component:
 // wraps the level image and the character Picker modal
-const Board: FC = () => {
+const Board: FC<BoardProps> = ({ data, level }) => {
 	// State:
 	// Sets modal location to click position
 	const [clickPos, setClickPos] = useState<Position>({ x: 0, y: 0 });
 	// Toggles display for Picker modal
 	const [view, setView] = useState<boolean>(false);
+	const [playing, setPlaying] = useState<boolean>(false);
 
+	
 	// Image element
 	const imageRef = useRef<HTMLImageElement>(null);
+
+	useLayoutEffect(() => {
+		const src = useDataSort(data, (level - 1));
+		if (imageRef.current !== null) {
+			imageRef.current.src = src;
+		}
+	}, []);
 
 	// Holds last width before resize
 	const widthRef = useRef<number | null>(null);
 
-	// On render, calculate location coordinates based on image width
+	// On first render, calculate location coordinates based on image width
 	useEffect(() => {
 		setTimeout(() => {
 			updateCoordinatesOnResize(imageRef, 1000);
@@ -131,7 +150,7 @@ const Board: FC = () => {
 
 	return (
 		<div className="relative mx-2 overflow-hidden rounded-md border">
-			<img alt="" src={picture} onClick={handleClick} id="img" ref={imageRef} />
+			<img alt="" src="" onClick={handleClick} id="img" ref={imageRef} />
 			<Picker
 				clickPos={clickPos}
 				view={view}
