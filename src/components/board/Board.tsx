@@ -1,13 +1,27 @@
-import React, { FC, useState, useRef, RefObject, useEffect, useLayoutEffect } from "react";
+import React, {
+	FC,
+	useState,
+	useRef,
+	RefObject,
+	useEffect,
+	useLayoutEffect,
+	Dispatch,
+	SetStateAction,
+} from "react";
 
 // Components and Assets
 import Picker from "../picker/Picker";
+import StartButton from "../startbutton/StartButton";
 
 // Types
 import { Data } from "../../App";
 interface BoardProps {
 	data: Data[];
 	level: number;
+	playing: boolean;
+	setPlaying: Dispatch<SetStateAction<boolean>>;
+	hideButton: boolean;
+	setHideButton: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface Position {
@@ -15,17 +29,17 @@ export interface Position {
 	y: number;
 }
 
-let locations: { char: string, location: number[] }[] = [];
+let locations: { char: string; location: number[] }[] = [];
 
 const useDataSort = (data: Data[], level: number): string => {
 	const d = data[level];
 	locations = [
-		{ char: d.waldo[0], location: [d.waldo[1], d.waldo[2]]},
-		{ char: d.odlaw[0], location: [d.odlaw[1], d.odlaw[2]]},
-		{ char: d.wizard[0], location: [d.wizard[1], d.wizard[2]]}
+		{ char: d.waldo[0], location: [d.waldo[1], d.waldo[2]] },
+		{ char: d.odlaw[0], location: [d.odlaw[1], d.odlaw[2]] },
+		{ char: d.wizard[0], location: [d.wizard[1], d.wizard[2]] },
 	];
 	return d.img;
-}
+};
 
 // Offsets modal position if click is near edge of container
 const usePositionOffset = (
@@ -90,24 +104,29 @@ const updateCoordinatesOnResize = (
 
 // Board component:
 // wraps the level image and the character Picker modal
-const Board: FC<BoardProps> = ({ data, level }) => {
+const Board: FC<BoardProps> = ({
+	data,
+	level,
+	playing,
+	setPlaying,
+	hideButton,
+	setHideButton,
+}) => {
 	// State:
 	// Sets modal location to click position
 	const [clickPos, setClickPos] = useState<Position>({ x: 0, y: 0 });
 	// Toggles display for Picker modal
 	const [view, setView] = useState<boolean>(false);
-	const [playing, setPlaying] = useState<boolean>(false);
 
-	
 	// Image element
 	const imageRef = useRef<HTMLImageElement>(null);
 
 	useLayoutEffect(() => {
-		const src = useDataSort(data, (level - 1));
+		const src = useDataSort(data, level - 1);
 		if (imageRef.current !== null) {
 			imageRef.current.src = src;
 		}
-	}, []);
+	}, [level]);
 
 	// Holds last width before resize
 	const widthRef = useRef<number | null>(null);
@@ -121,7 +140,7 @@ const Board: FC<BoardProps> = ({ data, level }) => {
 				widthRef.current = width;
 			}
 		}, 1000);
-	}, []);
+	}, [level]);
 
 	// Recalculate coordinates on window resize
 	useEffect(() => {
@@ -150,12 +169,25 @@ const Board: FC<BoardProps> = ({ data, level }) => {
 
 	return (
 		<div className="relative mx-2 overflow-hidden rounded-md border">
-			<img alt="" src="" onClick={handleClick} id="img" ref={imageRef} />
+			<img
+				alt=""
+				src=""
+				onClick={handleClick}
+				id="img"
+				ref={imageRef}
+				className={playing === false ? "blur-sm" : undefined}
+			/>
 			<Picker
 				clickPos={clickPos}
 				view={view}
 				setView={setView}
 				locations={locations}
+			/>
+			<StartButton
+				playing={playing}
+				setPlaying={setPlaying}
+				hideButton={hideButton}
+				setHideButton={setHideButton}
 			/>
 		</div>
 	);

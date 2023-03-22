@@ -30,13 +30,18 @@ module.exports = {
           '20%': { color: 'green', transform: 'translateY(4px)' },
           '40%': { color: 'green', transform: 'translateY(0px)' },
           '60%': { color: 'green' }
+        },
+        fadeout: {
+          '0%': { opacity: "1" },
+          '100%': { opacity: "0" },
         }
       },
       animation: {
         slide: 'slide 0.5s ease-out',
         open: 'open 0.3s linear',
         incorrect: 'incorrect 0.5s ease-out',
-        correct: 'correct 0.5s ease-out'
+        correct: 'correct 0.5s ease-out',
+        fadeout: 'fadeout 0.5s forwards ease-out, spin 1s linear infinite'
       }
     },
   },

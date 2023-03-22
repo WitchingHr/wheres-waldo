@@ -7,29 +7,12 @@ import React, {
 	useEffect,
 } from "react";
 
-// Data
-import { colRef, getDocs } from './firebase';
-const data: Data[] = [];
-const useData = () => {
-	getDocs(colRef)
-		.then((snapshot) => {
-			console.log(snapshot.docs)
-			snapshot.docs.forEach((doc) => {
-				data.push({...doc.data()})
-			})
-			console.log(data);
-		})
-		.catch((err) => {
-			console.log(err.message);
-		});
-}
-
 // Components
 import Board from "./components/board/Board";
-import LevelButton from "./components/button/Button";
+import LevelButton from "./components/levelbutton/LevelButton";
 import Characters from "./components/characters/Characters";
 
-const levelArr: number[] = [1, 2, 3, 4, 5, 6];
+const levelArr = [1, 2, 3];
 
 // Types
 export interface Objective {
@@ -37,18 +20,33 @@ export interface Objective {
 	Odlaw: boolean;
 	Wizard: boolean;
 }
-
 export interface Data {
 	img: string;
 	waldo: [string, number, number];
 	odlaw: [string, number, number];
 	wizard: [string, number, number];
 }
-
 interface ObjectiveCon {
 	objective: Objective;
 	setObjective: Dispatch<SetStateAction<Objective>>;
 }
+
+// Get data from server
+import { colRef, getDocs } from "./firebase";
+const data: Data[] = [];
+const useData = () => {
+	getDocs(colRef)
+		.then((snapshot) => {
+			console.log(snapshot.docs);
+			snapshot.docs.forEach((doc) => {
+				data.push({ ...doc.data() });
+			});
+			console.log(data);
+		})
+		.catch((err) => {
+			console.log(err.message);
+		});
+};
 
 // Create context
 export const ObjectiveContext = createContext<ObjectiveCon | null>(null);
@@ -61,6 +59,8 @@ const App: FC = () => {
 		Odlaw: false,
 		Wizard: false,
 	});
+	const [playing, setPlaying] = useState<boolean>(false);
+	const [hideButton, setHideButton] = useState<boolean>(false);
 
 	useEffect(() => {
 		useData();
@@ -85,7 +85,10 @@ const App: FC = () => {
 									<LevelButton
 										name={num}
 										level={level}
-										handleClick={() => setLevel(num)}
+										setLevel={setLevel}
+										setObjective={setObjective}
+										setPlaying={setPlaying}
+										setHideButton={setHideButton}
 									/>
 								</li>
 							);
@@ -96,7 +99,14 @@ const App: FC = () => {
 				{level === null ? (
 					<div>Select a level to begin...</div>
 				) : (
-					<Board data={data} level={level} />
+					<Board
+						data={data}
+						level={level}
+						playing={playing}
+						setPlaying={setPlaying}
+						hideButton={hideButton}
+						setHideButton={setHideButton}
+					/>
 				)}
 			</div>
 		</ObjectiveContext.Provider>
