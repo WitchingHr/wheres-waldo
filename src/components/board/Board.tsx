@@ -22,6 +22,8 @@ interface BoardProps {
 	setPlaying: Dispatch<SetStateAction<boolean>>;
 	hideButton: boolean;
 	setHideButton: Dispatch<SetStateAction<boolean>>;
+	text: string | number;
+	setText: Dispatch<SetStateAction<string | number>>;
 }
 
 export interface Position {
@@ -99,7 +101,6 @@ const updateCoordinatesOnResize = (
 			return { ...char, location: calcNewLocations(xy, scaleFactor) };
 		});
 	}
-	// console.log(locations); // Delete me..............................................
 };
 
 // Board component:
@@ -111,6 +112,8 @@ const Board: FC<BoardProps> = ({
 	setPlaying,
 	hideButton,
 	setHideButton,
+	text,
+	setText
 }) => {
 	// State:
 	// Sets modal location to click position
@@ -131,16 +134,16 @@ const Board: FC<BoardProps> = ({
 	// Holds last width before resize
 	const widthRef = useRef<number | null>(null);
 
-	// On first render, calculate location coordinates based on image width
+	// Calculate coordinates on playing = true
 	useEffect(() => {
-		setTimeout(() => {
+		if (playing === true) {
 			updateCoordinatesOnResize(imageRef, 1000);
 			if (imageRef.current !== null) {
-				const width: number = imageRef.current.offsetWidth;
+				const width = imageRef.current.offsetWidth;
 				widthRef.current = width;
 			}
-		}, 1000);
-	}, [level]);
+		}
+	}, [playing]);
 
 	// Recalculate coordinates on window resize
 	useEffect(() => {
@@ -159,12 +162,15 @@ const Board: FC<BoardProps> = ({
 
 	// When click on image => Get coordinates, calculate offset, and set state
 	const handleClick = (e: React.MouseEvent) => {
-		const localX = e.clientX;
-		const localY = e.clientY - 30 + window.scrollY;
-		console.log(localX, localY); // Delete me...................................
-		const position = usePositionOffset(localX, localY, imageRef);
-		setClickPos(position);
-		setView(!view);
+		if (imageRef.current !== null) {
+			const rect = imageRef.current.getBoundingClientRect();
+			const localX = e.clientX - rect.left;
+			const localY = e.clientY - rect.top + window.scrollY;
+			console.log(localX, localY); // Delete me...................................
+			const position = usePositionOffset(localX, localY, imageRef);
+			setClickPos(position);
+			setView(!view);
+		}
 	};
 
 	return (
@@ -188,6 +194,8 @@ const Board: FC<BoardProps> = ({
 				setPlaying={setPlaying}
 				hideButton={hideButton}
 				setHideButton={setHideButton}
+				text={text}
+				setText={setText}
 			/>
 		</div>
 	);

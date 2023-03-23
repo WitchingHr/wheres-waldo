@@ -34,14 +34,23 @@ module.exports = {
         fadeout: {
           '0%': { opacity: "1" },
           '100%': { opacity: "0" },
+        },
+        arrow: {
+          '50%': { marginLeft: '5px' },
+        },
+        rise: {
+          '50%': { opacity: '0' },
+          '100%': { transform: 'translateY(0px)', opacity: '1' }
         }
       },
       animation: {
-        slide: 'slide 0.5s ease-out',
+        slide: 'slide 1.5s ease-out',
         open: 'open 0.3s linear',
         incorrect: 'incorrect 0.5s ease-out',
         correct: 'correct 0.5s ease-out',
-        fadeout: 'fadeout 0.5s forwards ease-out, spin 1s linear infinite'
+        fadeout: 'fadeout 0.5s forwards ease-out, spin 1s linear infinite',
+        arrow: 'arrow 1s linear infinite',
+        rise: 'rise 1s forwards linear'
       }
     },
   },

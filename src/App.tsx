@@ -5,12 +5,14 @@ import React, {
 	SetStateAction,
 	Dispatch,
 	useEffect,
+	useRef,
 } from "react";
 
 // Components
 import Board from "./components/board/Board";
 import LevelButton from "./components/levelbutton/LevelButton";
 import Characters from "./components/characters/Characters";
+import Header from "./components/header/Header";
 
 const levelArr = [1, 2, 3];
 
@@ -20,12 +22,11 @@ export interface Objective {
 	Odlaw: boolean;
 	Wizard: boolean;
 }
+
 export interface Data {
-	img: string;
-	waldo: [string, number, number];
-	odlaw: [string, number, number];
-	wizard: [string, number, number];
+	[key: string]: any;
 }
+
 interface ObjectiveCon {
 	objective: Objective;
 	setObjective: Dispatch<SetStateAction<Objective>>;
@@ -34,14 +35,15 @@ interface ObjectiveCon {
 // Get data from server
 import { colRef, getDocs } from "./firebase";
 const data: Data[] = [];
-const useData = () => {
+const useData = (setIsLoading: Dispatch<SetStateAction<boolean>>) => {
 	getDocs(colRef)
 		.then((snapshot) => {
-			console.log(snapshot.docs);
 			snapshot.docs.forEach((doc) => {
 				data.push({ ...doc.data() });
 			});
-			console.log(data);
+			console.log(data); // Delete me...................................
+			// Level select is hidden until load is complete
+			setIsLoading(false);
 		})
 		.catch((err) => {
 			console.log(err.message);
@@ -53,6 +55,7 @@ export const ObjectiveContext = createContext<ObjectiveCon | null>(null);
 
 // App component:
 const App: FC = () => {
+	// State:
 	const [level, setLevel] = useState<number | null>(null);
 	const [objective, setObjective] = useState<Objective>({
 		Waldo: false,
@@ -61,44 +64,71 @@ const App: FC = () => {
 	});
 	const [playing, setPlaying] = useState<boolean>(false);
 	const [hideButton, setHideButton] = useState<boolean>(false);
+	const [text, setText] = useState<string | number>("Start");
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
+	// Get data on first render (image url's and character coordinates)
 	useEffect(() => {
-		useData();
+		useData(setIsLoading);
 	}, []);
 
-	// Check if round is complete
+	// Start timer when playing === true
+	const timerRef = useRef<number | null>(null);
 	useEffect(() => {
-		const values = Object.values(objective);
-		if (values.every((value) => value === true)) {
-			// TODO: Add state for round complete
+		if (playing === true) {
+			timerRef.current = Date.now();
+		}
+	}, [playing]);
+
+	// Get time when round complete
+	useEffect(() => {
+		if (
+			Object.values(objective).every((val) => val === true) &&
+			timerRef.current !== null
+		) {
+			const time = (Date.now() - timerRef.current) / 1000;
+			console.log(time);
+			// timerRef.current = null;
 		}
 	}, [objective]);
 
 	return (
 		<ObjectiveContext.Provider value={{ objective, setObjective }}>
 			<div className="App">
+				<Header />
 				<div className="flex justify-between">
-					<ul className="ml-1 flex items-center gap-4">
-						{levelArr.map((num) => {
-							return (
-								<li key={num}>
-									<LevelButton
-										name={num}
-										level={level}
-										setLevel={setLevel}
-										setObjective={setObjective}
-										setPlaying={setPlaying}
-										setHideButton={setHideButton}
-									/>
-								</li>
-							);
-						})}
-					</ul>
-					<Characters objective={objective} />
+					{isLoading === false && (
+						<div className="flex items-center">
+							<ul className="ml-3 flex items-center gap-4">
+								{levelArr.map((num) => {
+									return (
+										<li key={num}>
+											<LevelButton
+												name={num}
+												level={level}
+												setLevel={setLevel}
+												setObjective={setObjective}
+												setPlaying={setPlaying}
+												setHideButton={setHideButton}
+												setText={setText}
+											/>
+										</li>
+									);
+								})}
+							</ul>
+							{level === null && (
+								<span className="ml-3 font-bold">
+									<span className="animate-arrow text-xl text-red-600">⇦</span>
+									<span className="m-3 text-lg text-blue-500">
+										Select a level to begin...
+									</span>
+								</span>
+							)}
+						</div>
+					)}
+					<Characters objective={objective} level={level} />
 				</div>
-				{level === null ? (
-					<div>Select a level to begin...</div>
-				) : (
+				{level === null ? null : (
 					<Board
 						data={data}
 						level={level}
@@ -106,6 +136,8 @@ const App: FC = () => {
 						setPlaying={setPlaying}
 						hideButton={hideButton}
 						setHideButton={setHideButton}
+						text={text}
+						setText={setText}
 					/>
 				)}
 			</div>

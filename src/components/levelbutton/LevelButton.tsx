@@ -9,6 +9,7 @@ interface ButtonProps {
 	setObjective: Dispatch<SetStateAction<Objective>>;
 	setPlaying: Dispatch<SetStateAction<boolean>>;
 	setHideButton: Dispatch<SetStateAction<boolean>>;
+	setText: Dispatch<SetStateAction<string | number>>;
 }
 
 // LevelButton component:
@@ -19,6 +20,7 @@ const LevelButton: FC<ButtonProps> = ({
 	setObjective,
 	setPlaying,
 	setHideButton,
+	setText,
 }) => {
 	// Select level, reset objective state
 	const handleClick = () => {
@@ -30,12 +32,16 @@ const LevelButton: FC<ButtonProps> = ({
 		});
 		setPlaying(false);
 		setHideButton(false);
+		setText("Start");
 	};
 
 	return (
 		<>
 			{level !== name ? (
-				<button onClick={handleClick} className="border px-2">
+				<button
+					onClick={handleClick}
+					className="border px-2 duration-200 hover:bg-slate-200"
+				>
 					{name}
 				</button>
 			) : (

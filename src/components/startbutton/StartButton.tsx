@@ -12,6 +12,8 @@ interface StartButtonProps {
 	setPlaying: Dispatch<SetStateAction<boolean>>;
 	hideButton: boolean;
 	setHideButton: Dispatch<SetStateAction<boolean>>;
+	text: string | number;
+	setText: Dispatch<SetStateAction<string | number>>;
 }
 
 const StartButton: FC<StartButtonProps> = ({
@@ -19,11 +21,12 @@ const StartButton: FC<StartButtonProps> = ({
 	setPlaying,
 	hideButton,
 	setHideButton,
+  text,
+  setText
 }) => {
 	const buttonRef = useRef<HTMLButtonElement>(null);
 	const intervalRef = useRef<number | undefined>(undefined);
 
-	const [text, setText] = useState<string | number>("Start");
 
 	// Start countdown, disable button
 	const handleClick = () => {
@@ -66,7 +69,7 @@ const StartButton: FC<StartButtonProps> = ({
 					ref={buttonRef}
 					onClick={handleClick}
 					className={
-						"absolute top-0 bottom-0 left-0 right-0 m-auto h-10 w-32 cursor-pointer rounded-md bg-white text-2xl " +
+						"absolute top-0 bottom-0 left-0 right-0 m-auto h-10 w-32 cursor-pointer bg-white text-blue-500 text-2xl " +
 						(playing === true ? "animate-fadeout" : undefined)
 					}
 				>
