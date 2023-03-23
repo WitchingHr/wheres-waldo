@@ -10,6 +10,7 @@ interface ButtonProps {
 	setPlaying: Dispatch<SetStateAction<boolean>>;
 	setHideButton: Dispatch<SetStateAction<boolean>>;
 	setText: Dispatch<SetStateAction<string | number>>;
+	setViewLeader: Dispatch<SetStateAction<boolean>>;
 }
 
 // LevelButton component:
@@ -21,6 +22,7 @@ const LevelButton: FC<ButtonProps> = ({
 	setPlaying,
 	setHideButton,
 	setText,
+	setViewLeader
 }) => {
 	// Select level, reset objective state
 	const handleClick = () => {
@@ -33,6 +35,7 @@ const LevelButton: FC<ButtonProps> = ({
 		setPlaying(false);
 		setHideButton(false);
 		setText("Start");
+		setViewLeader(false);
 	};
 
 	return (

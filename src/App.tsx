@@ -34,6 +34,7 @@ interface ObjectiveCon {
 
 // Get data from server
 import { colRef, getDocs } from "./firebase";
+import Leaderboard from "./components/leaderboard/Leaderboard";
 const data: Data[] = [];
 const useData = (setIsLoading: Dispatch<SetStateAction<boolean>>) => {
 	getDocs(colRef)
@@ -66,6 +67,7 @@ const App: FC = () => {
 	const [hideButton, setHideButton] = useState<boolean>(false);
 	const [text, setText] = useState<string | number>("Start");
 	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [viewLeader, setViewLeader] = useState<boolean>(true);
 
 	// Get data on first render (image url's and character coordinates)
 	useEffect(() => {
@@ -95,7 +97,7 @@ const App: FC = () => {
 	return (
 		<ObjectiveContext.Provider value={{ objective, setObjective }}>
 			<div className="App">
-				<Header />
+				<Header setLevel={setLevel} viewLeader={viewLeader} setViewLeader={setViewLeader} />
 				<div className="flex justify-between">
 					{isLoading === false && (
 						<div className="flex items-center">
@@ -111,6 +113,7 @@ const App: FC = () => {
 												setPlaying={setPlaying}
 												setHideButton={setHideButton}
 												setText={setText}
+												setViewLeader={setViewLeader}
 											/>
 										</li>
 									);
@@ -128,7 +131,9 @@ const App: FC = () => {
 					)}
 					<Characters objective={objective} level={level} />
 				</div>
-				{level === null ? null : (
+				{level === null ? (
+					<Leaderboard />
+				) : (
 					<Board
 						data={data}
 						level={level}

@@ -113,7 +113,7 @@ const Board: FC<BoardProps> = ({
 	hideButton,
 	setHideButton,
 	text,
-	setText
+	setText,
 }) => {
 	// State:
 	// Sets modal location to click position
@@ -145,19 +145,19 @@ const Board: FC<BoardProps> = ({
 		}
 	}, [playing]);
 
+	const onResize = () => {
+		updateCoordinatesOnResize(imageRef, widthRef);
+		if (imageRef.current !== null) {
+			const width: number = imageRef.current.offsetWidth;
+			widthRef.current = width;
+		}
+	}
+
 	// Recalculate coordinates on window resize
 	useEffect(() => {
-		window.addEventListener("resize", () => {
-			updateCoordinatesOnResize(imageRef, widthRef);
-			if (imageRef.current !== null) {
-				const width: number = imageRef.current.offsetWidth;
-				widthRef.current = width;
-			}
-		});
+		window.addEventListener("resize", onResize);
 		return () =>
-			window.removeEventListener("resize", () =>
-				updateCoordinatesOnResize(imageRef, widthRef)
-			);
+			window.removeEventListener("resize", onResize);
 	}, []);
 
 	// When click on image => Get coordinates, calculate offset, and set state
@@ -165,7 +165,7 @@ const Board: FC<BoardProps> = ({
 		if (imageRef.current !== null) {
 			const rect = imageRef.current.getBoundingClientRect();
 			const localX = e.clientX - rect.left;
-			const localY = e.clientY - rect.top + window.scrollY;
+			const localY = e.clientY - rect.top;
 			console.log(localX, localY); // Delete me...................................
 			const position = usePositionOffset(localX, localY, imageRef);
 			setClickPos(position);
@@ -174,7 +174,7 @@ const Board: FC<BoardProps> = ({
 	};
 
 	return (
-		<div className="relative mx-2 overflow-hidden rounded-md border">
+		<div className="relative z-10 mx-2 overflow-hidden rounded-md border bg-white">
 			<img
 				alt=""
 				src=""

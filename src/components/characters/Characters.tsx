@@ -22,7 +22,7 @@ const Characters: FC<CharacterProps> = ({ objective, level }) => {
 	return (
 		<div
 			className={
-				"mr-4 flex h-10 translate-y-10 items-center opacity-0 " +
+				"z-0 mr-4 flex h-10 translate-y-10 items-center opacity-0 " +
 				(level !== null ? "animate-rise" : null)
 			}
 		>

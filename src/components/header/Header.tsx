@@ -1,15 +1,21 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { signInUser, signOutUser, firebaseObserver } from "../../firebase";
-// Types
-import { User } from "firebase/auth";
 // Logo
 import Logo from "../../assets/logo.png";
 
-const Header: FC = () => {
+// Types
+import { User } from "firebase/auth";
+interface HeaderProps {
+	setLevel: Dispatch<SetStateAction<number | null>>;
+	viewLeader: boolean;
+	setViewLeader: Dispatch<SetStateAction<boolean>>;
+}
+
+const Header: FC<HeaderProps> = ({ setLevel, viewLeader, setViewLeader }) => {
 	const [name, setName] = useState<string | null>(null);
 	const [signedIn, setSignedIn] = useState<boolean>(false);
 
-	// Listen for auth events
+	// Listen for sign in / sign out
 	useEffect(() => {
 		firebaseObserver.subscribe("authStateChanged", (data: User) => {
 			if (data) {
@@ -22,9 +28,22 @@ const Header: FC = () => {
 		return () => firebaseObserver.unsubscribe("authStateChanged");
 	}, []);
 
+	const handleClick = () => {
+		setLevel(null);
+		setViewLeader(true);
+	};
+
 	return (
-		<div className="flex items-center justify-between">
+		<div className="relative flex items-center justify-between">
 			<img src={Logo} alt="" className="m-1 ml-2 h-10" />
+			{viewLeader === false && (
+				<button
+					onClick={handleClick}
+					className="absolute left-0 right-0 w-[175px] mx-auto border px-3 duration-200 text-lg hover:bg-slate-200"
+				>
+					View Leaderboard
+				</button>
+			)}
 			<span className="flex items-center gap-2 text-lg">
 				{signedIn && (
 					<span className="text-blue-500">
