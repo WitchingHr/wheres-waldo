@@ -1,3 +1,4 @@
+// Server
 import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { colRef, db } from "./firebase";
@@ -43,13 +44,32 @@ const sortLBData = (data: Data[]) => {
 };
 
 // Get leaderboard data
-export const useLBData = async (): Promise<Data[]> => {
+export const useLBData = async (): Promise<[LBData, [number, string][]]> => {
 	const data: Data[] = [];
 	const querySnapshot = await getDocs(collection(db, "leaderboard"));
 	querySnapshot.forEach((doc) => {
 		data.push(doc.data());
 	});
-	return sortLBData(data);
+	console.log(data);
+	const personalBest = getPersonalBest(data);
+	const sortedLBData = sortLBData(data);
+	return [sortedLBData, personalBest];
+};
+
+// Filter LB data to get user's time
+export const getPersonalBest = (data: Data[]): [number, string][] => {
+	const auth = getAuth();
+	const userID: any = auth.currentUser?.uid;
+	const result: [number, string][] = [];
+	data.forEach((level) => {
+		Object.entries(level).forEach((user) => {
+			if (user[0] === userID) {
+				const { time, name } = user[1];
+				result.push([time, name]);
+			}
+		});
+	});
+	return result;
 };
 
 // Send time and user info to server for leaderboard
@@ -160,6 +180,7 @@ export const useIncorrect = (ref: RefObject<HTMLButtonElement>) => {
 	}
 };
 
+// Get image source based on character
 export const usePic = (char: string) => {
 	if (char === "Waldo") return waldoImg;
 	if (char === "Odlaw") return odlawImg;

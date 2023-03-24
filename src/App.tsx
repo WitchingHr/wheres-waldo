@@ -1,10 +1,4 @@
-import React, {
-	FC,
-	useState,
-	createContext,
-	useEffect,
-	useRef,
-} from "react";
+import React, { FC, useState, createContext, useEffect, useRef } from "react";
 
 // Components:
 import Board from "./components/board/Board";
@@ -16,9 +10,8 @@ import Leaderboard from "./components/leaderboard/Leaderboard";
 // Server functions:
 import { useCoordinatesData, useLBData, sendTimeToServer } from "./util";
 
-
 // Types:
-import { Objective, Data, ObjectiveCon } from "./types";
+import { Objective, Data, ObjectiveCon, LBData } from "./types";
 
 // Context:
 export const ObjectiveContext = createContext<ObjectiveCon | null>(null);
@@ -38,7 +31,8 @@ const App: FC = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [viewLeader, setViewLeader] = useState<boolean>(true);
 	const [coordinatesData, setCoordinatesData] = useState<Data[]>([]);
-	const [leaderBoardData, setLeaderBoardData] = useState<Data[]>([]);
+	const [leaderBoardData, setLeaderBoardData] = useState<LBData>([]);
+	const [personalBest, setPersonalBest] = useState<[number, string][]>([]);
 
 	// Get data on first render and set state and loading to false
 	useEffect(() => {
@@ -47,7 +41,8 @@ const App: FC = () => {
 		Promise.all([getCoordinates, getLBData])
 			.then((values) => {
 				setCoordinatesData(values[0]);
-				setLeaderBoardData(values[1]);
+				setLeaderBoardData(values[1][0]);
+				setPersonalBest(values[1][1]);
 				setIsLoading(false);
 			})
 			.catch((err) => {
@@ -120,7 +115,10 @@ const App: FC = () => {
 				{isLoading === false && (
 					<>
 						{level === null ? (
-							<Leaderboard leaderBoardData={leaderBoardData} />
+							<Leaderboard
+								leaderBoardData={leaderBoardData}
+								personalBest={personalBest}
+							/>
 						) : (
 							<Board
 								data={coordinatesData}
