@@ -2,56 +2,25 @@ import React, {
 	FC,
 	useState,
 	createContext,
-	SetStateAction,
-	Dispatch,
 	useEffect,
 	useRef,
 } from "react";
 
-// Components
+// Components:
 import Board from "./components/board/Board";
 import LevelButton from "./components/levelbutton/LevelButton";
 import Characters from "./components/characters/Characters";
 import Header from "./components/header/Header";
-
-const levelArr = [1, 2, 3];
-
-// Types
-export interface Objective {
-	Waldo: boolean;
-	Odlaw: boolean;
-	Wizard: boolean;
-}
-
-export interface Data {
-	[key: string]: any;
-}
-
-interface ObjectiveCon {
-	objective: Objective;
-	setObjective: Dispatch<SetStateAction<Objective>>;
-}
-
-// Get data from server
-import { colRef, getDocs } from "./firebase";
 import Leaderboard from "./components/leaderboard/Leaderboard";
-const data: Data[] = [];
-const useData = (setIsLoading: Dispatch<SetStateAction<boolean>>) => {
-	getDocs(colRef)
-		.then((snapshot) => {
-			snapshot.docs.forEach((doc) => {
-				data.push({ ...doc.data() });
-			});
-			console.log(data); // Delete me...................................
-			// Level select is hidden until load is complete
-			setIsLoading(false);
-		})
-		.catch((err) => {
-			console.log(err.message);
-		});
-};
 
-// Create context
+// Server functions:
+import { useCoordinatesData, useLBData, sendTimeToServer } from "./util";
+
+
+// Types:
+import { Objective, Data, ObjectiveCon } from "./types";
+
+// Context:
 export const ObjectiveContext = createContext<ObjectiveCon | null>(null);
 
 // App component:
@@ -68,10 +37,22 @@ const App: FC = () => {
 	const [text, setText] = useState<string | number>("Start");
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [viewLeader, setViewLeader] = useState<boolean>(true);
+	const [coordinatesData, setCoordinatesData] = useState<Data[]>([]);
+	const [leaderBoardData, setLeaderBoardData] = useState<Data[]>([]);
 
-	// Get data on first render (image url's and character coordinates)
+	// Get data on first render and set state and loading to false
 	useEffect(() => {
-		useData(setIsLoading);
+		const getCoordinates = useCoordinatesData();
+		const getLBData = useLBData();
+		Promise.all([getCoordinates, getLBData])
+			.then((values) => {
+				setCoordinatesData(values[0]);
+				setLeaderBoardData(values[1]);
+				setIsLoading(false);
+			})
+			.catch((err) => {
+				console.log(err.message);
+			});
 	}, []);
 
 	// Start timer when playing === true
@@ -82,22 +63,27 @@ const App: FC = () => {
 		}
 	}, [playing]);
 
-	// Get time when round complete
+	// Send time to server when all characters are found
 	useEffect(() => {
 		if (
 			Object.values(objective).every((val) => val === true) &&
 			timerRef.current !== null
 		) {
 			const time = (Date.now() - timerRef.current) / 1000;
-			console.log(time);
-			// timerRef.current = null;
+			if (level !== null) {
+				sendTimeToServer(time, level);
+			}
 		}
 	}, [objective]);
 
 	return (
 		<ObjectiveContext.Provider value={{ objective, setObjective }}>
 			<div className="App">
-				<Header setLevel={setLevel} viewLeader={viewLeader} setViewLeader={setViewLeader} />
+				<Header
+					setLevel={setLevel}
+					viewLeader={viewLeader}
+					setViewLeader={setViewLeader}
+				/>
 				<div className="flex justify-between">
 					{isLoading === false && (
 						<div className="flex items-center">
@@ -131,19 +117,23 @@ const App: FC = () => {
 					)}
 					<Characters objective={objective} level={level} />
 				</div>
-				{level === null ? (
-					<Leaderboard />
-				) : (
-					<Board
-						data={data}
-						level={level}
-						playing={playing}
-						setPlaying={setPlaying}
-						hideButton={hideButton}
-						setHideButton={setHideButton}
-						text={text}
-						setText={setText}
-					/>
+				{isLoading === false && (
+					<>
+						{level === null ? (
+							<Leaderboard leaderBoardData={leaderBoardData} />
+						) : (
+							<Board
+								data={coordinatesData}
+								level={level}
+								playing={playing}
+								setPlaying={setPlaying}
+								hideButton={hideButton}
+								setHideButton={setHideButton}
+								text={text}
+								setText={setText}
+							/>
+						)}
+					</>
 				)}
 			</div>
 		</ObjectiveContext.Provider>
@@ -151,3 +141,5 @@ const App: FC = () => {
 };
 
 export default App;
+
+const levelArr = [1, 2, 3];

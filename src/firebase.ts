@@ -22,31 +22,13 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore();
 
 const colRef = collection(db, 'levels');
+const leaderRef = collection(db, 'leaderboard');
 
-export { getDocs, colRef };
+export { getDocs, colRef, leaderRef, db };
 
-let token, user, credential;
 export const signInUser = async () => {
   const provider = new GoogleAuthProvider();
   await signInWithPopup(getAuth(), provider)
-    .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      credential = GoogleAuthProvider.credentialFromResult(result);
-      token = credential.accessToken;
-      // The signed-in user info.
-      user = result.user;
-      // IdP data available using getAdditionalUserInfo(result)
-      // ...
-    }).catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.customData.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
-    });
 }
 
 const auth = getAuth();
@@ -58,5 +40,3 @@ auth.onAuthStateChanged(function(user) {
 export const signOutUser = () => {
   signOut(getAuth());
 }
-
-export { user };

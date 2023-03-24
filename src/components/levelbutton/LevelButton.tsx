@@ -1,7 +1,7 @@
 import React, { Dispatch, FC, SetStateAction } from "react";
 
 // Types
-import { Objective } from "../../App";
+import { Objective } from "../../types";
 interface ButtonProps {
 	name: number;
 	level: number | null;

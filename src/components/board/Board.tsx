@@ -2,19 +2,22 @@ import React, {
 	FC,
 	useState,
 	useRef,
-	RefObject,
 	useEffect,
 	useLayoutEffect,
 	Dispatch,
 	SetStateAction,
 } from "react";
 
-// Components and Assets
+// Components:
 import Picker from "../picker/Picker";
 import StartButton from "../startbutton/StartButton";
 
-// Types
-import { Data } from "../../App";
+// Functions:
+import { usePositionOffset, updateCoordinatesOnResize } from "../../util";
+
+// Types:
+import { Data, Coordinates, Position } from "../../types";
+
 interface BoardProps {
 	data: Data[];
 	level: number;
@@ -26,81 +29,17 @@ interface BoardProps {
 	setText: Dispatch<SetStateAction<string | number>>;
 }
 
-export interface Position {
-	x: number;
-	y: number;
-}
+let coordinates: Coordinates = [];
 
-let locations: { char: string; location: number[] }[] = [];
 
 const useDataSort = (data: Data[], level: number): string => {
 	const d = data[level];
-	locations = [
-		{ char: d.waldo[0], location: [d.waldo[1], d.waldo[2]] },
-		{ char: d.odlaw[0], location: [d.odlaw[1], d.odlaw[2]] },
-		{ char: d.wizard[0], location: [d.wizard[1], d.wizard[2]] },
+	coordinates = [
+		{ char: d.waldo[0], coordinate: [d.waldo[1], d.waldo[2]] },
+		{ char: d.odlaw[0], coordinate: [d.odlaw[1], d.odlaw[2]] },
+		{ char: d.wizard[0], coordinate: [d.wizard[1], d.wizard[2]] },
 	];
 	return d.img;
-};
-
-// Offsets modal position if click is near edge of container
-const usePositionOffset = (
-	x: number,
-	y: number,
-	ref: RefObject<HTMLImageElement>
-): Position => {
-	if (ref.current !== null) {
-		// Get height and width of image
-		const width: number = ref.current.offsetWidth;
-		const height: number = ref.current.offsetHeight;
-		// Update x or y if past breakpoint
-		if (y >= height - 126) {
-			y = height - 129;
-		}
-		if (x >= width - 160) {
-			x = width - 170;
-		}
-	}
-	return { x: x, y: y };
-};
-
-// Calculate scale factor by dividing image width with prev width | number
-const calcScaleFactor = (
-	ref1: RefObject<HTMLImageElement>,
-	ref2: RefObject<number> | number
-): number => {
-	if (typeof ref2 === "object") {
-		if (ref1.current !== null && ref2.current !== null) {
-			const width: number = ref1.current.offsetWidth;
-			return width / ref2.current;
-		}
-	} else {
-		if (ref1.current !== null) {
-			const width: number = ref1.current.offsetWidth;
-			return width / ref2;
-		}
-	}
-	throw new Error("Bad ref");
-};
-
-// Calculates new coordinates by multiplying coordinates by scale factor
-const calcNewLocations = (location: number[], scaleFactor: number) => {
-	const [x, y] = location;
-	return [Math.trunc(x * scaleFactor), Math.trunc(y * scaleFactor)];
-};
-
-// Calculate coordinates based on image width
-const updateCoordinatesOnResize = (
-	ref1: RefObject<HTMLImageElement>,
-	ref2: RefObject<number> | number
-) => {
-	if (ref1 !== null) {
-		const scaleFactor = calcScaleFactor(ref1, ref2);
-		locations = locations.map((char) => {
-			const xy = char.location;
-			return { ...char, location: calcNewLocations(xy, scaleFactor) };
-		});
-	}
 };
 
 // Board component:
@@ -137,7 +76,7 @@ const Board: FC<BoardProps> = ({
 	// Calculate coordinates on playing = true
 	useEffect(() => {
 		if (playing === true) {
-			updateCoordinatesOnResize(imageRef, 1000);
+			coordinates = updateCoordinatesOnResize(imageRef, 1000, coordinates);
 			if (imageRef.current !== null) {
 				const width = imageRef.current.offsetWidth;
 				widthRef.current = width;
@@ -146,18 +85,17 @@ const Board: FC<BoardProps> = ({
 	}, [playing]);
 
 	const onResize = () => {
-		updateCoordinatesOnResize(imageRef, widthRef);
+		coordinates = updateCoordinatesOnResize(imageRef, widthRef, coordinates);
 		if (imageRef.current !== null) {
 			const width: number = imageRef.current.offsetWidth;
 			widthRef.current = width;
 		}
-	}
+	};
 
 	// Recalculate coordinates on window resize
 	useEffect(() => {
 		window.addEventListener("resize", onResize);
-		return () =>
-			window.removeEventListener("resize", onResize);
+		return () => window.removeEventListener("resize", onResize);
 	}, []);
 
 	// When click on image => Get coordinates, calculate offset, and set state
@@ -166,7 +104,6 @@ const Board: FC<BoardProps> = ({
 			const rect = imageRef.current.getBoundingClientRect();
 			const localX = e.clientX - rect.left;
 			const localY = e.clientY - rect.top;
-			console.log(localX, localY); // Delete me...................................
 			const position = usePositionOffset(localX, localY, imageRef);
 			setClickPos(position);
 			setView(!view);
@@ -187,7 +124,7 @@ const Board: FC<BoardProps> = ({
 				clickPos={clickPos}
 				view={view}
 				setView={setView}
-				locations={locations}
+				coordinates={coordinates}
 			/>
 			<StartButton
 				playing={playing}

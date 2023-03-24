@@ -3,7 +3,6 @@ import React, {
 	FC,
 	SetStateAction,
 	useRef,
-	useState,
 	useEffect,
 } from "react";
 
@@ -26,7 +25,6 @@ const StartButton: FC<StartButtonProps> = ({
 }) => {
 	const buttonRef = useRef<HTMLButtonElement>(null);
 	const intervalRef = useRef<number | undefined>(undefined);
-
 
 	// Start countdown, disable button
 	const handleClick = () => {

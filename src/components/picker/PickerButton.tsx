@@ -1,28 +1,14 @@
-import React, {
-	FC,
-	Dispatch,
-	SetStateAction,
-	useContext,
-	useRef,
-	RefObject,
-} from "react";
+import React, { FC, Dispatch, SetStateAction, useContext, useRef } from "react";
 
-// Pics
-import waldoImg from "../../assets/Waldo.jpg";
-import odlawImg from "../../assets/Odlaw.jpg";
-import wizardImg from "../../assets/Wizard.jpg";
-
-const usePic = (char: string) => {
-	if (char === "Waldo") return waldoImg;
-	if (char === "Odlaw") return odlawImg;
-	if (char === "Wizard") return wizardImg;
-};
+// Functions
+import { useCorrect, useIncorrect, usePic } from "../../util";
 
 // Types
-import { Position } from "../board/Board";
+import { Position } from "../../types";
+
 interface PickerButtonProps {
 	char: string;
-	location: number[];
+	coordinate: number[];
 	clickPos: Position;
 	setView: Dispatch<SetStateAction<boolean>>;
 }
@@ -36,40 +22,10 @@ const useObjectiveContext = () => {
 	return context;
 };
 
-// On correct => animate button, close modal
-const useCorrect = (
-	ref: RefObject<HTMLButtonElement>,
-	fn: Dispatch<SetStateAction<boolean>>
-) => {
-	if (ref.current !== null) {
-		ref.current.classList.toggle("animate-correct");
-		setTimeout(() => {
-			if (ref.current !== null) {
-				ref.current.classList.toggle("animate-correct");
-				fn(false);
-			}
-		}, 500);
-	}
-};
-
-// On incorrect => animate button
-const useIncorrect = (ref: RefObject<HTMLButtonElement>) => {
-	if (ref.current !== null) {
-		ref.current.classList.toggle("animate-incorrect");
-		setTimeout(() => {
-			if (ref.current !== null) {
-				ref.current.classList.toggle("animate-incorrect");
-			}
-		}, 600);
-	}
-};
-
 // PickerButton component:
-// - button containing image and name of character,
-// - stateful logic for selecting character
 const PickerButton: FC<PickerButtonProps> = ({
 	char,
-	location,
+	coordinate,
 	clickPos,
 	setView,
 }) => {
@@ -86,8 +42,7 @@ const PickerButton: FC<PickerButtonProps> = ({
 
 	const handleClick = () => {
 		// Character coordinates
-		const [xChar, yChar] = location;
-
+		const [xChar, yChar] = coordinate;
 		// If correct, update objective state, animate button and close modal
 		if (Math.abs(xChar - x) < 30 && Math.abs(yChar - y) < 30) {
 			setObjective({
