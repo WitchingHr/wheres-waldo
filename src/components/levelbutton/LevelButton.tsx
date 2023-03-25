@@ -43,7 +43,7 @@ const LevelButton: FC<ButtonProps> = ({
 			{level !== name ? (
 				<button
 					onClick={handleClick}
-					className="border px-2 duration-200 hover:bg-slate-200"
+					className="border px-2 text-blue-500 transition duration-200 hover:bg-slate-200"
 				>
 					{name}
 				</button>
@@ -51,7 +51,7 @@ const LevelButton: FC<ButtonProps> = ({
 				<button
 					onClick={handleClick}
 					disabled
-					className="border bg-slate-300 px-2"
+					className="border text-red-600 font-bold px-2"
 				>
 					{name}
 				</button>

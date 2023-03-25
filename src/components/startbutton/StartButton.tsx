@@ -67,7 +67,7 @@ const StartButton: FC<StartButtonProps> = ({
 					ref={buttonRef}
 					onClick={handleClick}
 					className={
-						"absolute top-0 bottom-0 left-0 right-0 m-auto h-10 w-32 cursor-pointer bg-white text-blue-500 text-2xl " +
+						"absolute top-0 bottom-0 left-0 right-0 m-auto h-10 w-32 text-xl rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-red-600 transition " +
 						(playing === true ? "animate-fadeout" : undefined)
 					}
 				>

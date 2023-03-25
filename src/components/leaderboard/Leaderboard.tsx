@@ -22,22 +22,28 @@ const Leaderboard: FC<LeaderboardProps> = ({
 				<div className="border py-1 text-center text-2xl font-bold text-blue-500">
 					Personal Best
 				</div>
-				<ul className="flex">
-					{personalBest.map((level, i) => (
-						<li
-							key={i}
-							className="flex w-1/3 items-center gap-2 border text-lg"
-						>
-							<img src={waldo} alt="waldo" className="h-10" />
-							<span className="grow-[1] text-center text-blue-500">
-								{level[0].toFixed(1)}s
-							</span>
-							<span className="grow-[3] overflow-hidden text-ellipsis text-center font-bold text-red-600">
-								{level[1]}
-							</span>
-						</li>
-					))}
-				</ul>
+				{personalBest !== null ? (
+					<ul className="flex">
+						{personalBest.map((level, i) => (
+							<li
+								key={i}
+								className="flex w-1/3 items-center gap-2 border text-lg"
+							>
+								<img src={waldo} alt="waldo" className="h-10" />
+								<span className="grow-[1] text-center text-blue-500">
+									{level[0].toFixed(1)}s
+								</span>
+								<span className="grow-[3] overflow-hidden text-ellipsis text-center font-bold text-red-600">
+									{level[1]}
+								</span>
+							</li>
+						))}
+					</ul>
+				) : (
+					<div className="border py-1 text-center text-lg font-bold text-red-600">
+						Log in to upload your best times and view your personal best
+					</div>
+				)}
 			</div>
 
 			<div>

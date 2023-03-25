@@ -12,6 +12,7 @@ import { useCoordinatesData, useLBData, sendTimeToServer } from "./util";
 
 // Types:
 import { Objective, Data, ObjectiveCon, LBData } from "./types";
+import { getAuth } from "firebase/auth";
 
 // Context:
 export const ObjectiveContext = createContext<ObjectiveCon | null>(null);
@@ -32,7 +33,7 @@ const App: FC = () => {
 	const [viewLeader, setViewLeader] = useState<boolean>(true);
 	const [coordinatesData, setCoordinatesData] = useState<Data[]>([]);
 	const [leaderBoardData, setLeaderBoardData] = useState<LBData>([]);
-	const [personalBest, setPersonalBest] = useState<[number, string][]>([]);
+	const [personalBest, setPersonalBest] = useState<[number, string][] | null>([]);
 	const [time, setTime] = useState<number | null>(null);
 
 	// Get data on first render and set state and loading to false

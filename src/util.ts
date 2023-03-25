@@ -1,5 +1,5 @@
 // Server
-import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import { collection, getDocs, updateDoc, doc, runTransaction } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { colRef, db } from "./firebase";
 
@@ -44,7 +44,7 @@ const sortLBData = (data: Data[]) => {
 };
 
 // Get leaderboard data
-export const useLBData = async (): Promise<[LBData, [number, string][]]> => {
+export const useLBData = async (): Promise<[LBData, [number, string][] | null]> => {
 	const data: Data[] = [];
 	const querySnapshot = await getDocs(collection(db, "leaderboard"));
 	querySnapshot.forEach((doc) => {
@@ -56,9 +56,12 @@ export const useLBData = async (): Promise<[LBData, [number, string][]]> => {
 };
 
 // Filter LB data to get user's time
-export const getPersonalBest = (data: Data[]): [number, string][] => {
+export const getPersonalBest = (data: Data[]): [number, string][] | null => {
 	const auth = getAuth();
-	const userID: any = auth.currentUser?.uid;
+	if (auth.currentUser === null) {
+		return null;
+	}
+	const userID: string = auth.currentUser.uid;
 	const result: [number, string][] = [];
 	data.forEach((level) => {
 		Object.entries(level).forEach((user) => {
@@ -71,19 +74,38 @@ export const getPersonalBest = (data: Data[]): [number, string][] => {
 	return result;
 };
 
-// Send time and user info to server for leaderboard
-export const sendTimeToServer = async (time: number, level: number) => {
+// Send time and user info to server for leaderboard if time is better
+export const sendTimeToServer = async (timer: number, level: number) => {
 	const auth = getAuth();
-	const user: any = auth.currentUser?.uid;
-	const name = auth.currentUser?.displayName;
+	if (auth.currentUser === null) {
+		throw new Error("User is not logged in");
+	}
+	const user: string = auth.currentUser.uid;
+	const name = auth.currentUser.displayName;
 	const levelString = level?.toFixed();
 	const ref = doc(db, "leaderboard", levelString);
-	await updateDoc(ref, {
-		[user]: {
-			name: name,
-			time: time,
-		},
-	});
+	await runTransaction(db, async (transaction) => {
+		const doc = await transaction.get(ref);
+		if (!doc.exists()) {
+			throw new Error("Document does not exist!");
+		}
+		if (doc.data()[user] === undefined) {
+			await updateDoc(ref, {
+				[user]: {
+					time: timer,
+					name: name,
+				},
+			});
+		}
+		if (doc.data()[user].time > timer) {
+			transaction.update(ref, {
+				[user]: {
+					time: timer,
+					name: name,
+				},
+			});
+		}
+	})
 };
 
 // Offsets modal position if click is near edge of container
