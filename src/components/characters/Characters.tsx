@@ -9,7 +9,7 @@ import odlawImg from "../../assets/Odlaw.jpg";
 import wizardImg from "../../assets/Wizard.jpg";
 
 // Types
-import { Objective } from "../../App";
+import { Objective } from "../../types";
 interface CharacterProps {
 	objective: Objective;
 	level: number | null;

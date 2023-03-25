@@ -35,3 +35,19 @@ it('should render the correct button text on level 3', () => {
   const button = screen.getByRole('button');
   expect(button).toHaveTextContent('View Leaderboard');
 });
+
+it('should render the correct time', () => {
+  render(
+    <Modal
+      level={1}
+      setLevel={() => null}
+      setObjective={() => null}
+      setPlaying={() => null}
+      setHideButton={() => null}
+      setText={() => null}
+      setViewLeader={() => null}
+      time={1.23}
+    />
+  );
+  expect(screen.getByText('1.23s')).toBeInTheDocument();
+});
