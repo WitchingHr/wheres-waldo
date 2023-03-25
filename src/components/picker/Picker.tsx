@@ -20,6 +20,7 @@ const Picker: FC<PickerProps> = ({ clickPos, view, setView, coordinates }) => {
 
 	return (
 		<div
+			data-testid="picker"
 			className={
 				(view ? "block " : "hidden ") +
 				"absolute mx-2 w-40 animate-open overflow-hidden rounded-md border bg-slate-100 p-1 shadow-xl"

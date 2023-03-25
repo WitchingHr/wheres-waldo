@@ -12,7 +12,6 @@ import { useCoordinatesData, useLBData, sendTimeToServer } from "./util";
 
 // Types:
 import { Objective, Data, ObjectiveCon, LBData } from "./types";
-import { getAuth } from "firebase/auth";
 
 // Context:
 export const ObjectiveContext = createContext<ObjectiveCon | null>(null);
@@ -89,7 +88,7 @@ const App: FC = () => {
 				/>
 				<div className="flex justify-between">
 					{isLoading === false && (
-						<div className="flex items-center">
+						<div className="flex items-center relative">
 							<ul className="ml-3 flex items-center gap-4">
 								{levelArr.map((num) => {
 									return (
@@ -109,8 +108,8 @@ const App: FC = () => {
 								})}
 							</ul>
 							{level === null && (
-								<span className="ml-3 font-bold">
-									<span className="animate-arrow text-xl text-red-600">⇦</span>
+								<span className="animate-arrow absolute top-1 left-32 ml-3 font-bold whitespace-nowrap">
+									<span className="text-xl text-red-600">⇦</span>
 									<span className="m-3 text-lg text-blue-500">
 										Select a level to begin...
 									</span>

@@ -58,6 +58,7 @@ const StartButton: FC<StartButtonProps> = ({
 		<>
 			{hideButton === false ? (
 				<button
+					data-testid="start-button"
 					ref={buttonRef}
 					onClick={handleClick}
 					className={

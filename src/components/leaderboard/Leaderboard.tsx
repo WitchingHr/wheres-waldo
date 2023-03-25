@@ -22,6 +22,13 @@ const Leaderboard: FC<LeaderboardProps> = ({
 				<div className="border py-1 text-center text-2xl font-bold text-blue-500">
 					Personal Best
 				</div>
+				<ul className="flex">
+					{levels.map((level) => (
+						<li key={level} className="w-1/3 border py-1 text-center text-lg">
+							Level {level}
+						</li>
+					))}
+				</ul>
 				{personalBest !== null ? (
 					<ul className="flex">
 						{personalBest.map((level, i) => (
