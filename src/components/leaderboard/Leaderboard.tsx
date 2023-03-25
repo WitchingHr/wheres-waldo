@@ -7,7 +7,7 @@ import wizard from "../../assets/Wizard.jpg";
 import { LBData } from "../../types";
 interface LeaderboardProps {
 	leaderBoardData: LBData;
-	personalBest: [number, string][];
+	personalBest: [number, string][] | null;
 }
 
 const levels = [1, 2, 3];

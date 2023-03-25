@@ -22,7 +22,7 @@ const LevelButton: FC<ButtonProps> = ({
 	setPlaying,
 	setHideButton,
 	setText,
-	setViewLeader
+	setViewLeader,
 }) => {
 	// Select level, reset objective state
 	const handleClick = () => {
@@ -51,7 +51,7 @@ const LevelButton: FC<ButtonProps> = ({
 				<button
 					onClick={handleClick}
 					disabled
-					className="border text-red-600 font-bold px-2"
+					className="border px-2 font-bold text-red-600"
 				>
 					{name}
 				</button>

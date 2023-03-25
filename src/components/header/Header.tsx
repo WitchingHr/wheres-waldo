@@ -9,12 +9,13 @@ interface HeaderProps {
 	setLevel: Dispatch<SetStateAction<number | null>>;
 	viewLeader: boolean;
 	setViewLeader: Dispatch<SetStateAction<boolean>>;
+	signedIn: boolean;
+	setSignedIn: Dispatch<SetStateAction<boolean>>;
 }
 
 // Header component:
-const Header: FC<HeaderProps> = ({ setLevel, viewLeader, setViewLeader }) => {
+const Header: FC<HeaderProps> = ({ setLevel, viewLeader, setViewLeader, signedIn, setSignedIn }) => {
 	const [name, setName] = useState<string | null>(null);
-	const [signedIn, setSignedIn] = useState<boolean>(false);
 
 	// Listen for sign in / sign out
 	useEffect(() => {

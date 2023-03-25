@@ -1,5 +1,11 @@
 // Server
-import { collection, getDocs, updateDoc, doc, runTransaction } from "firebase/firestore";
+import {
+	collection,
+	getDocs,
+	updateDoc,
+	doc,
+	runTransaction,
+} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { colRef, db } from "./firebase";
 
@@ -44,7 +50,9 @@ const sortLBData = (data: Data[]) => {
 };
 
 // Get leaderboard data
-export const useLBData = async (): Promise<[LBData, [number, string][] | null]> => {
+export const useLBData = async (): Promise<
+	[LBData, [number, string][] | null]
+> => {
 	const data: Data[] = [];
 	const querySnapshot = await getDocs(collection(db, "leaderboard"));
 	querySnapshot.forEach((doc) => {
@@ -55,7 +63,7 @@ export const useLBData = async (): Promise<[LBData, [number, string][] | null]> 
 	return [sortedLBData, personalBest];
 };
 
-// Filter LB data to get user's time
+// Filter LB data to get user's time for each level, returns null if user is not logged in
 export const getPersonalBest = (data: Data[]): [number, string][] | null => {
 	const auth = getAuth();
 	if (auth.currentUser === null) {
@@ -105,7 +113,7 @@ export const sendTimeToServer = async (timer: number, level: number) => {
 				},
 			});
 		}
-	})
+	});
 };
 
 // Offsets modal position if click is near edge of container

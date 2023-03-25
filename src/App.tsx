@@ -33,8 +33,11 @@ const App: FC = () => {
 	const [viewLeader, setViewLeader] = useState<boolean>(true);
 	const [coordinatesData, setCoordinatesData] = useState<Data[]>([]);
 	const [leaderBoardData, setLeaderBoardData] = useState<LBData>([]);
-	const [personalBest, setPersonalBest] = useState<[number, string][] | null>([]);
+	const [personalBest, setPersonalBest] = useState<[number, string][] | null>(
+		[]
+	);
 	const [time, setTime] = useState<number | null>(null);
+	const [signedIn, setSignedIn] = useState<boolean>(false);
 
 	// Get data on first render and set state and loading to false
 	useEffect(() => {
@@ -50,7 +53,7 @@ const App: FC = () => {
 			.catch((err) => {
 				console.log(err.message);
 			});
-	}, []);
+	}, [viewLeader, signedIn]);
 
 	// Start timer when playing === true
 	const timerRef = useRef<number | null>(null);
@@ -81,6 +84,8 @@ const App: FC = () => {
 					setLevel={setLevel}
 					viewLeader={viewLeader}
 					setViewLeader={setViewLeader}
+					signedIn={signedIn}
+					setSignedIn={setSignedIn}
 				/>
 				<div className="flex justify-between">
 					{isLoading === false && (
