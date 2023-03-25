@@ -11,6 +11,7 @@ interface HeaderProps {
 	setViewLeader: Dispatch<SetStateAction<boolean>>;
 }
 
+// Header component:
 const Header: FC<HeaderProps> = ({ setLevel, viewLeader, setViewLeader }) => {
 	const [name, setName] = useState<string | null>(null);
 	const [signedIn, setSignedIn] = useState<boolean>(false);
@@ -39,7 +40,7 @@ const Header: FC<HeaderProps> = ({ setLevel, viewLeader, setViewLeader }) => {
 			{viewLeader === false && (
 				<button
 					onClick={handleClick}
-					className="absolute left-0 right-0 w-[175px] mx-auto border px-3 duration-200 text-lg hover:bg-slate-200"
+					className="md:absolute left-0 right-0 w-[175px] mx-auto border px-3 duration-200 text-lg hover:bg-slate-200"
 				>
 					View Leaderboard
 				</button>

@@ -50,7 +50,6 @@ export const useLBData = async (): Promise<[LBData, [number, string][]]> => {
 	querySnapshot.forEach((doc) => {
 		data.push(doc.data());
 	});
-	console.log(data);
 	const personalBest = getPersonalBest(data);
 	const sortedLBData = sortLBData(data);
 	return [sortedLBData, personalBest];

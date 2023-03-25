@@ -33,6 +33,7 @@ const App: FC = () => {
 	const [coordinatesData, setCoordinatesData] = useState<Data[]>([]);
 	const [leaderBoardData, setLeaderBoardData] = useState<LBData>([]);
 	const [personalBest, setPersonalBest] = useState<[number, string][]>([]);
+	const [time, setTime] = useState<number | null>(null);
 
 	// Get data on first render and set state and loading to false
 	useEffect(() => {
@@ -65,6 +66,7 @@ const App: FC = () => {
 			timerRef.current !== null
 		) {
 			const time = (Date.now() - timerRef.current) / 1000;
+			setTime(time);
 			if (level !== null) {
 				sendTimeToServer(time, level);
 			}
@@ -123,12 +125,17 @@ const App: FC = () => {
 							<Board
 								data={coordinatesData}
 								level={level}
+								setLevel={setLevel}
+								objective={objective}
+								setObjective={setObjective}
+								time={time}
 								playing={playing}
 								setPlaying={setPlaying}
 								hideButton={hideButton}
 								setHideButton={setHideButton}
 								text={text}
 								setText={setText}
+								setViewLeader={setViewLeader}
 							/>
 						)}
 					</>

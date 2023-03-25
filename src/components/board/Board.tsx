@@ -16,24 +16,30 @@ import StartButton from "../startbutton/StartButton";
 import { usePositionOffset, updateCoordinatesOnResize } from "../../util";
 
 // Types:
-import { Data, Coordinates, Position } from "../../types";
+import { Data, Coordinates, Position, Objective } from "../../types";
+import Modal from "../modal/Modal";
 
 interface BoardProps {
 	data: Data[];
-	level: number;
+	level: number | null;
+	setLevel: Dispatch<SetStateAction<number | null>>;
+	objective: Objective;
+	setObjective: Dispatch<SetStateAction<Objective>>;
+	time: number | null;
 	playing: boolean;
 	setPlaying: Dispatch<SetStateAction<boolean>>;
 	hideButton: boolean;
 	setHideButton: Dispatch<SetStateAction<boolean>>;
 	text: string | number;
 	setText: Dispatch<SetStateAction<string | number>>;
+	setViewLeader: Dispatch<SetStateAction<boolean>>;
 }
 
 let coordinates: Coordinates = [];
 
 
 const useDataSort = (data: Data[], level: number): string => {
-	const d = data[level];
+	const d = data[level - 1];
 	coordinates = [
 		{ char: d.waldo[0], coordinate: [d.waldo[1], d.waldo[2]] },
 		{ char: d.odlaw[0], coordinate: [d.odlaw[1], d.odlaw[2]] },
@@ -47,12 +53,17 @@ const useDataSort = (data: Data[], level: number): string => {
 const Board: FC<BoardProps> = ({
 	data,
 	level,
+	setLevel,
+	objective,
+	setObjective,
+	time,
 	playing,
 	setPlaying,
 	hideButton,
 	setHideButton,
 	text,
 	setText,
+	setViewLeader
 }) => {
 	// State:
 	// Sets modal location to click position
@@ -63,10 +74,13 @@ const Board: FC<BoardProps> = ({
 	// Image element
 	const imageRef = useRef<HTMLImageElement>(null);
 
+	// Get image source before paint
 	useLayoutEffect(() => {
-		const src = useDataSort(data, level - 1);
-		if (imageRef.current !== null) {
-			imageRef.current.src = src;
+		if (level !== null) {
+			const src = useDataSort(data, level);
+			if (imageRef.current !== null) {
+				imageRef.current.src = src;
+			}
 		}
 	}, [level]);
 
@@ -85,10 +99,12 @@ const Board: FC<BoardProps> = ({
 	}, [playing]);
 
 	const onResize = () => {
-		coordinates = updateCoordinatesOnResize(imageRef, widthRef, coordinates);
-		if (imageRef.current !== null) {
-			const width: number = imageRef.current.offsetWidth;
-			widthRef.current = width;
+		if (playing === true) {
+			coordinates = updateCoordinatesOnResize(imageRef, widthRef, coordinates);
+			if (imageRef.current !== null) {
+				const width: number = imageRef.current.offsetWidth;
+				widthRef.current = width;
+			}
 		}
 	};
 
@@ -134,6 +150,18 @@ const Board: FC<BoardProps> = ({
 				text={text}
 				setText={setText}
 			/>
+			{Object.values(objective).every((val) => val === true) && (
+				<Modal
+					level={level}
+					setLevel={setLevel}
+					setObjective={setObjective}
+					time={time}
+					setPlaying={setPlaying}
+					setHideButton={setHideButton}
+					setText={setText}
+					setViewLeader={setViewLeader}
+				/>
+			)}
 		</div>
 	);
 };
