@@ -6,11 +6,13 @@ import React, {
 	useLayoutEffect,
 	PropsWithChildren,
 } from "react";
+import { useStateContext } from "../../reducer";
 
 // Components:
 import Picker from "../picker/Picker";
+import StartButton from "../startbutton/StartButton";
 
-// Functions:
+// Util functions:
 import { usePositionOffset, updateCoordinatesOnResize } from "../../util";
 
 // Types:
@@ -18,12 +20,9 @@ import { Data, Coordinates, Position } from "../../types";
 
 interface BoardProps {
 	data: Data[];
-	level: number | null;
-	playing: boolean;
 }
 
 let coordinates: Coordinates = [];
-
 
 const useDataSort = (data: Data[], level: number): string => {
 	const d = data[level - 1];
@@ -36,14 +35,9 @@ const useDataSort = (data: Data[], level: number): string => {
 };
 
 // Board component:
-// wraps the level image and the character Picker modal
-const Board: FC<PropsWithChildren<BoardProps>> = ({
-	data,
-	level,
-	playing,
-	children
-}) => {
+const Board: FC<PropsWithChildren<BoardProps>> = ({ data, children }) => {
 	// State:
+	const state = useStateContext();
 	// Sets modal location to click position
 	const [clickPos, setClickPos] = useState<Position>({ x: 0, y: 0 });
 	// Toggles display for Picker modal
@@ -54,30 +48,30 @@ const Board: FC<PropsWithChildren<BoardProps>> = ({
 
 	// Get image source before paint
 	useLayoutEffect(() => {
-		if (level !== null) {
-			const src = useDataSort(data, level);
+		if (state.level !== null) {
+			const src = useDataSort(data, state.level);
 			if (imageRef.current !== null) {
 				imageRef.current.src = src;
 			}
 		}
-	}, [level]);
+	}, [state.level]);
 
 	// Holds last width before resize
 	const widthRef = useRef<number | null>(null);
 
 	// Calculate coordinates on playing = true
 	useEffect(() => {
-		if (playing === true) {
+		if (state.playing === true) {
 			coordinates = updateCoordinatesOnResize(imageRef, 1000, coordinates);
 			if (imageRef.current !== null) {
 				const width = imageRef.current.offsetWidth;
 				widthRef.current = width;
 			}
 		}
-	}, [playing]);
+	}, [state.playing]);
 
 	const onResize = () => {
-		if (playing === true) {
+		if (state.playing === true) {
 			coordinates = updateCoordinatesOnResize(imageRef, widthRef, coordinates);
 			if (imageRef.current !== null) {
 				const width: number = imageRef.current.offsetWidth;
@@ -112,9 +106,10 @@ const Board: FC<PropsWithChildren<BoardProps>> = ({
 				onClick={handleClick}
 				id="img"
 				ref={imageRef}
-				className={playing === false ? "blur-sm" : undefined}
+				className={state.playing === false ? "blur-sm" : undefined}
 			/>
 			{children}
+			<StartButton />
 			<Picker
 				clickPos={clickPos}
 				view={view}

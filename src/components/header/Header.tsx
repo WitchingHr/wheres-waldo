@@ -1,4 +1,11 @@
-import React, { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import React, {
+	Dispatch,
+	FC,
+	SetStateAction,
+	useEffect,
+	useState,
+} from "react";
+import { useStateContext, useDispatchContext } from "../../reducer";
 import { signInUser, signOutUser, firebaseObserver } from "../../firebase";
 // Logo
 import Logo from "../../assets/logo.png";
@@ -6,15 +13,14 @@ import Logo from "../../assets/logo.png";
 // Types
 import { User } from "firebase/auth";
 interface HeaderProps {
-	setLevel: Dispatch<SetStateAction<number | null>>;
-	viewLeader: boolean;
-	setViewLeader: Dispatch<SetStateAction<boolean>>;
 	signedIn: boolean;
 	setSignedIn: Dispatch<SetStateAction<boolean>>;
 }
 
 // Header component:
-const Header: FC<HeaderProps> = ({ setLevel, viewLeader, setViewLeader, signedIn, setSignedIn }) => {
+const Header: FC<HeaderProps> = ({ signedIn, setSignedIn }) => {
+	const state = useStateContext();
+	const dispatch = useDispatchContext();
 	const [name, setName] = useState<string | null>(null);
 
 	// Listen for sign in / sign out
@@ -31,17 +37,16 @@ const Header: FC<HeaderProps> = ({ setLevel, viewLeader, setViewLeader, signedIn
 	}, []);
 
 	const handleClick = () => {
-		setLevel(null);
-		setViewLeader(true);
+		dispatch({ type: "OPEN_LEADERBOARD" });
 	};
 
 	return (
 		<div className="relative flex items-center justify-between">
 			<img src={Logo} alt="" className="m-1 ml-2 h-10" />
-			{viewLeader === false && (
+			{state.viewLeader === false && (
 				<button
 					onClick={handleClick}
-					className="md:absolute left-0 right-0 w-[175px] mx-auto border px-3 duration-200 text-lg hover:bg-slate-200"
+					className="left-0 right-0 mx-auto w-[175px] border px-3 text-lg duration-200 hover:bg-slate-200 md:absolute"
 				>
 					View Leaderboard
 				</button>

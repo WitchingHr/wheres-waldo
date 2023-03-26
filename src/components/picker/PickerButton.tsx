@@ -1,7 +1,8 @@
-import React, { FC, Dispatch, SetStateAction, useContext, useRef } from "react";
+import React, { FC, Dispatch, SetStateAction, useRef } from "react";
 
 // Functions
 import { useCorrect, useIncorrect, usePic } from "../../util";
+import { useStateContext, useDispatchContext } from "../../reducer";
 
 // Types
 import { Position } from "../../types";
@@ -13,15 +14,6 @@ interface PickerButtonProps {
 	setView: Dispatch<SetStateAction<boolean>>;
 }
 
-// Get context
-import { ObjectiveContext } from "../../App";
-const useObjectiveContext = () => {
-	const context = useContext(ObjectiveContext);
-	if (context === null)
-		throw new Error("Expected to have ObjectiveContext provided");
-	return context;
-};
-
 // PickerButton component:
 const PickerButton: FC<PickerButtonProps> = ({
 	char,
@@ -30,7 +22,8 @@ const PickerButton: FC<PickerButtonProps> = ({
 	setView,
 }) => {
 	// Get objective from context
-	const { objective, setObjective } = useObjectiveContext();
+	const state = useStateContext();
+	const dispatch = useDispatchContext();
 
 	// Get image src
 	const src = usePic(char);
@@ -45,10 +38,8 @@ const PickerButton: FC<PickerButtonProps> = ({
 		const [xChar, yChar] = coordinate;
 		// If correct, update objective state, animate button and close modal
 		if (Math.abs(xChar - x) < 30 && Math.abs(yChar - y) < 30) {
-			setObjective({
-				...objective,
-				[char]: true,
-			});
+			const next = { ...state.objective, [char]: true };
+			dispatch({ type: "SET_OBJECTIVE", payload: next });
 			useCorrect(buttonRef, setView);
 		} else {
 			// If incorrect, animate button

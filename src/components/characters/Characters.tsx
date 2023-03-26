@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { useStateContext } from "../../reducer";
 
 // Components
 import CharImage from "./CharImage";
@@ -8,28 +9,22 @@ import waldoImg from "../../assets/Waldo.jpg";
 import odlawImg from "../../assets/Odlaw.jpg";
 import wizardImg from "../../assets/Wizard.jpg";
 
-// Types
-import { Objective } from "../../types";
-interface CharacterProps {
-	objective: Objective;
-	level: number | null;
-}
-
 // Characters component:
-// - wrapper component for character images
-const Characters: FC<CharacterProps> = ({ objective, level }) => {
-	const { Waldo, Odlaw, Wizard } = objective;
+const Characters: FC = () => {
+	const state = useStateContext();
+
+	const { Waldo, Odlaw, Wizard } = state.objective;
 	return (
 		<div
 			className={
 				"z-0 mr-4 flex h-10 translate-y-10 items-center opacity-0 " +
-				(level !== null ? "animate-rise" : null)
+				(state.level !== null ? "animate-rise" : null)
 			}
 		>
 			<div
 				className={
 					"relative mr-3 rounded-lg bg-slate-200 px-3 " +
-					(level !== null ? "animate-slide" : null)
+					(state.level !== null ? "animate-slide" : null)
 				}
 			>
 				Find us!

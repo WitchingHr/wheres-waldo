@@ -1,58 +1,41 @@
-import React, { Dispatch, FC, SetStateAction } from "react";
+import React, { FC } from "react";
+import { useStateContext, useDispatchContext } from "../../reducer";
 
 // Types:
-import { Objective } from "../../types";
 interface ModalProps {
-	level: number | null;
-	setLevel: Dispatch<SetStateAction<number | null>>;
-	setObjective: Dispatch<SetStateAction<Objective>>;
 	time: number | null;
-	setPlaying: Dispatch<SetStateAction<boolean>>;
-  setHideButton: Dispatch<SetStateAction<boolean>>;
-  setText: Dispatch<SetStateAction<string | number>>;
-  setViewLeader: Dispatch<SetStateAction<boolean>>;
 }
 
 // Modal component:
-const Modal: FC<ModalProps> = ({
-	level,
-	setLevel,
-	setObjective,
-	time,
-	setPlaying,
-  setHideButton,
-  setText,
-  setViewLeader
-}) => {
+const Modal: FC<ModalProps> = ({ time }) => {
+	const state = useStateContext();
+	const dispatch = useDispatchContext();
+
 	const handleNextLevel = () => {
-		if (level !== null) {
-      if (level !== 3) {
-        setLevel(level + 1);
-      } else {
-        setLevel(null);
-        setViewLeader(true);
-      }
-      setObjective({ Waldo: false, Odlaw: false, Wizard: false });
-      setPlaying(false);
-      setHideButton(false);
-      setText("Start");
+		if (state.level === null) return;
+		if (state.level !== 3) {
+			dispatch({ type: "SET_NEXT_LEVEL", payload: state.level + 1 });
+		} else {
+			dispatch({ type: "SET_GAME_OVER" });
 		}
 	};
 
 	return (
 		<div className="fixed top-0 left-0 z-50 h-full w-full bg-black bg-opacity-50">
-			<div className="absolute top-1/2 left-1/2 w-1/2 py-5 -translate-x-1/2 -translate-y-1/2 transform rounded-md bg-white shadow-lg sm:w-1/3">
+			<div className="absolute top-1/2 left-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 transform rounded-md bg-white py-5 shadow-lg sm:w-1/3">
 				<div className="flex h-full flex-col items-center justify-center">
-					<div className="text-2xl font-bold text-blue-500">Level {level}:</div>
+					<div className="text-2xl font-bold text-blue-500">
+						Level {state.level}:
+					</div>
 					<div className="text-lg text-blue-500">
 						Time complete:
 						<span className="font-bold text-red-600"> {time}s</span>
 					</div>
 					<button
-						className="mt-4 rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-red-600 transition"
+						className="mt-4 rounded-md bg-blue-500 px-4 py-2 text-white transition hover:bg-red-600"
 						onClick={handleNextLevel}
 					>
-						{level !== 3 ? "Next Level" : "View Leaderboard"}
+						{state.level !== 3 ? "Next Level" : "View Leaderboard"}
 					</button>
 				</div>
 			</div>

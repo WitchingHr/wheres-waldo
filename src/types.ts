@@ -1,6 +1,25 @@
 import { Dispatch, SetStateAction } from "react";
 
 // Types:
+
+export interface State {
+	level: number | null;
+	playing: boolean;
+	hideButton: boolean;
+	text: string | number;
+	viewLeader: boolean;
+	objective: {
+		Waldo: boolean;
+		Odlaw: boolean;
+		Wizard: boolean;
+	};
+}
+
+export interface Action {
+	type: string;
+	payload?: any;
+}
+
 export interface Objective {
 	Waldo: boolean;
 	Odlaw: boolean;
