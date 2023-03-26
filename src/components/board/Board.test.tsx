@@ -1,24 +1,15 @@
 import React from "react";
 import { act, screen } from "@testing-library/react";
-import { customRender, data, objective } from "../../test/test-util";
+import { customRender, data } from "../../test/test-util";
 import Board from "./Board";
+import StartButton from "../startbutton/StartButton";
 
 it("should not show Picker modal on render", () => {
   customRender(
     <Board
       data={data}
       level={1}
-      setLevel={() => null}
-      objective={objective}
-      setObjective={() => null}
-      time={1}
       playing={false}
-      setPlaying={() => null}
-      hideButton={false}
-      setHideButton={() => null}
-      text={"Start"}
-      setText={() => null}
-      setViewLeader={() => null}
     />);
   const picker = screen.getByTestId("picker");
   expect(picker).not.toBeVisible();
@@ -29,17 +20,7 @@ it("should open the Picker modal when image is clicked", () => {
     <Board
       data={data}
       level={1}
-      setLevel={() => null}
-      objective={objective}
-      setObjective={() => null}
-      time={1}
       playing={false}
-      setPlaying={() => null}
-      hideButton={false}
-      setHideButton={() => null}
-      text={"Start"}
-      setText={() => null}
-      setViewLeader={() => null}
     />
   );
   const image = screen.getByRole("img");
@@ -55,17 +36,7 @@ it("should close the Picker modal when image is clicked again", () => {
     <Board
       data={data}
       level={1}
-      setLevel={() => null}
-      objective={objective}
-      setObjective={() => null}
-      time={1}
       playing={false}
-      setPlaying={() => null}
-      hideButton={false}
-      setHideButton={() => null}
-      text={"Start"}
-      setText={() => null}
-      setViewLeader={() => null}
     />
   );
   const image = screen.getByRole("img");
@@ -84,18 +55,17 @@ it("should have start visible on render", () => {
     <Board
       data={data}
       level={1}
-      setLevel={() => null}
-      objective={objective}
-      setObjective={() => null}
-      time={1}
       playing={false}
-      setPlaying={() => null}
-      hideButton={false}
-      setHideButton={() => null}
-      text={"Start"}
-      setText={() => null}
-      setViewLeader={() => null}
-    />
+    >
+      <StartButton
+        playing={false}
+        setPlaying={() => null}
+        hideButton={false}
+        setHideButton={() => null}
+        text={"Start"}
+        setText={() => null}
+      />
+    </Board>
   );
   const start = screen.getByTestId("start-button");
   expect(start).toBeVisible();
@@ -106,18 +76,17 @@ it("should disable start button on click", () => {
     <Board
       data={data}
       level={1}
-      setLevel={() => null}
-      objective={objective}
-      setObjective={() => null}
-      time={1}
       playing={false}
-      setPlaying={() => null}
-      hideButton={false}
-      setHideButton={() => null}
-      text={"Start"}
-      setText={() => null}
-      setViewLeader={() => null}
-    />
+    >
+      <StartButton
+        playing={false}
+        setPlaying={() => null}
+        hideButton={false}
+        setHideButton={() => null}
+        text={"Start"}
+        setText={() => null}
+      />
+    </Board>
   );
   const start = screen.getByTestId("start-button");
   act(() => {

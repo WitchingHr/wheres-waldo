@@ -12,6 +12,9 @@ import { useCoordinatesData, useLBData, sendTimeToServer } from "./util";
 
 // Types:
 import { Objective, Data, ObjectiveCon, LBData } from "./types";
+import Picker from "./components/picker/Picker";
+import StartButton from "./components/startbutton/StartButton";
+import Modal from "./components/modal/Modal";
 
 // Context:
 export const ObjectiveContext = createContext<ObjectiveCon | null>(null);
@@ -130,18 +133,29 @@ const App: FC = () => {
 							<Board
 								data={coordinatesData}
 								level={level}
-								setLevel={setLevel}
-								objective={objective}
-								setObjective={setObjective}
-								time={time}
 								playing={playing}
-								setPlaying={setPlaying}
-								hideButton={hideButton}
-								setHideButton={setHideButton}
-								text={text}
-								setText={setText}
-								setViewLeader={setViewLeader}
-							/>
+							>
+								<StartButton
+									playing={playing}
+									setPlaying={setPlaying}
+									hideButton={hideButton}
+									setHideButton={setHideButton}
+									text={text}
+									setText={setText}
+								/>
+								{Object.values(objective).every((val) => val === true) && (
+									<Modal
+										level={level}
+										setLevel={setLevel}
+										setObjective={setObjective}
+										time={time}
+										setPlaying={setPlaying}
+										setHideButton={setHideButton}
+										setText={setText}
+										setViewLeader={setViewLeader}
+									/>
+								)}
+							</Board>
 						)}
 					</>
 				)}

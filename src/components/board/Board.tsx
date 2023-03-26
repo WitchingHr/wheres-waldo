@@ -4,35 +4,22 @@ import React, {
 	useRef,
 	useEffect,
 	useLayoutEffect,
-	Dispatch,
-	SetStateAction,
+	PropsWithChildren,
 } from "react";
 
 // Components:
 import Picker from "../picker/Picker";
-import StartButton from "../startbutton/StartButton";
 
 // Functions:
 import { usePositionOffset, updateCoordinatesOnResize } from "../../util";
 
 // Types:
-import { Data, Coordinates, Position, Objective } from "../../types";
-import Modal from "../modal/Modal";
+import { Data, Coordinates, Position } from "../../types";
 
 interface BoardProps {
 	data: Data[];
 	level: number | null;
-	setLevel: Dispatch<SetStateAction<number | null>>;
-	objective: Objective;
-	setObjective: Dispatch<SetStateAction<Objective>>;
-	time: number | null;
 	playing: boolean;
-	setPlaying: Dispatch<SetStateAction<boolean>>;
-	hideButton: boolean;
-	setHideButton: Dispatch<SetStateAction<boolean>>;
-	text: string | number;
-	setText: Dispatch<SetStateAction<string | number>>;
-	setViewLeader: Dispatch<SetStateAction<boolean>>;
 }
 
 let coordinates: Coordinates = [];
@@ -50,20 +37,11 @@ const useDataSort = (data: Data[], level: number): string => {
 
 // Board component:
 // wraps the level image and the character Picker modal
-const Board: FC<BoardProps> = ({
+const Board: FC<PropsWithChildren<BoardProps>> = ({
 	data,
 	level,
-	setLevel,
-	objective,
-	setObjective,
-	time,
 	playing,
-	setPlaying,
-	hideButton,
-	setHideButton,
-	text,
-	setText,
-	setViewLeader
+	children
 }) => {
 	// State:
 	// Sets modal location to click position
@@ -136,32 +114,13 @@ const Board: FC<BoardProps> = ({
 				ref={imageRef}
 				className={playing === false ? "blur-sm" : undefined}
 			/>
+			{children}
 			<Picker
 				clickPos={clickPos}
 				view={view}
 				setView={setView}
 				coordinates={coordinates}
 			/>
-			<StartButton
-				playing={playing}
-				setPlaying={setPlaying}
-				hideButton={hideButton}
-				setHideButton={setHideButton}
-				text={text}
-				setText={setText}
-			/>
-			{Object.values(objective).every((val) => val === true) && (
-				<Modal
-					level={level}
-					setLevel={setLevel}
-					setObjective={setObjective}
-					time={time}
-					setPlaying={setPlaying}
-					setHideButton={setHideButton}
-					setText={setText}
-					setViewLeader={setViewLeader}
-				/>
-			)}
 		</div>
 	);
 };
