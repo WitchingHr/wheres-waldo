@@ -7,7 +7,8 @@ import React, {
 } from "react";
 
 import { useStateContext, useDispatchContext } from "../../reducer";
-import { signInUser, signOutUser, firebaseObserver } from "../../firebase";
+import { signInUser, signOutUser } from "../../firebase";
+import pubsub from "../../pubsub";
 import Logo from "../../assets/logo.png";
 
 // Types
@@ -23,17 +24,19 @@ const Header: FC<HeaderProps> = ({ signedIn, setSignedIn }) => {
 	const dispatch = useDispatchContext();
 	const [name, setName] = useState<string | null>(null);
 
+	const handleSignIn = (data: User) => {
+		if (data) {
+			setName(data.displayName);
+			setSignedIn(true);
+		} else {
+			setSignedIn(false);
+		}
+	};
+
 	// Listen for sign in / sign out
 	useEffect(() => {
-		firebaseObserver.subscribe("authStateChanged", (data: User) => {
-			if (data) {
-				setName(data.displayName);
-				setSignedIn(true);
-			} else {
-				setSignedIn(false);
-			}
-		});
-		return () => firebaseObserver.unsubscribe("authStateChanged");
+		pubsub.subscribe("authStateChanged", handleSignIn);
+		return () => pubsub.unsubscribe("authStateChanged", handleSignIn);
 	}, []);
 
 	// Open leaderboard, hide board

@@ -60,3 +60,17 @@ interface levelData {
 	wizard: characterData[];
 }
 type CoordinatesData = levelData[];
+
+type func = (data: any) => void;
+
+interface event {
+  // [key: string]: (data: any) => void[];
+  [key: string]: func[];
+}
+
+export interface PubSub {
+  events: event;
+  subscribe: (eventName: string, fn: (data: any) => void) => void;
+  unsubscribe: (eventName: string, fn: (data: any) => void) => void;
+  publish: (eventName: string, data: any) => void;
+}

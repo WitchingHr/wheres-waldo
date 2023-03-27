@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, getDocs, collection } from "firebase/firestore";
 import { GoogleAuthProvider, getAuth, signInWithPopup, signOut } from "firebase/auth";
-import ReactObserver from 'react-event-observer';
+import pubsub from "./pubsub";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -30,9 +30,8 @@ export const signInUser = async () => {
 }
 
 const auth = getAuth();
-export const firebaseObserver = ReactObserver();
 auth.onAuthStateChanged(function(user) {
-  firebaseObserver.publish("authStateChanged", auth.currentUser);
+  pubsub.publish("authStateChanged", auth.currentUser);
 });
 
 export const signOutUser = () => {
