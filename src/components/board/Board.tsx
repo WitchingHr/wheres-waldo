@@ -45,7 +45,7 @@ const Board: FC<PropsWithChildren> = ({ children }) => {
 
 	// Get image source before paint
 	useLayoutEffect(() => {
-		if (state.level !== null) {
+		if (state.level !== null && state.coordinatesData !== null) {
 			const src = useDataSort(state.coordinatesData, state.level);
 			if (imageRef.current !== null) {
 				imageRef.current.src = src;

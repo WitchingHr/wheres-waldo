@@ -56,7 +56,7 @@ const Leaderboard: FC = () => {
 					))}
 				</ul>
 				<div className="flex">
-					{leaderBoardData.map((level, i) => (
+					{leaderBoardData !== null && leaderBoardData.map((level, i) => (
 						<ul key={i} className="w-1/3">
 							{level.map((item: [number, string], j: number) => (
 								<li key={j} className="flex items-center gap-2 border text-lg">

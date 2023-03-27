@@ -72,6 +72,13 @@ export const getPersonalBest = (data: Data[]): [number, string][] | null => {
 	const userID: string = auth.currentUser.uid;
 	const result: [number, string][] = [];
 	data.forEach((level) => {
+		const keys = Object.keys(level);
+		// If user has no data, push 0 and "No Data"
+		if (keys.includes(userID) === false) {
+			result.push([0, "No Data"]);
+			return;
+		}
+		// If user has data, push time and name
 		Object.entries(level).forEach((user) => {
 			if (user[0] === userID) {
 				const { time, name } = user[1];
@@ -86,7 +93,7 @@ export const getPersonalBest = (data: Data[]): [number, string][] | null => {
 export const sendTimeToServer = async (timer: number, level: number) => {
 	const auth = getAuth();
 	if (auth.currentUser === null) {
-		throw new Error("User is not logged in");
+		return;
 	}
 	const user: string = auth.currentUser.uid;
 	const name = auth.currentUser.displayName;
@@ -97,6 +104,7 @@ export const sendTimeToServer = async (timer: number, level: number) => {
 		if (!doc.exists()) {
 			throw new Error("Document does not exist!");
 		}
+		// If user has no data, add data
 		if (doc.data()[user] === undefined) {
 			await updateDoc(ref, {
 				[user]: {
@@ -105,14 +113,14 @@ export const sendTimeToServer = async (timer: number, level: number) => {
 				},
 			});
 		}
-		if (doc.data()[user].time > timer) {
-			transaction.update(ref, {
-				[user]: {
-					time: timer,
-					name: name,
-				},
-			});
-		}
+		// if (doc.data()[user].time > timer) {
+		// 	transaction.update(ref, {
+		// 		[user]: {
+		// 			time: timer,
+		// 			name: name,
+		// 		},
+		// 	});
+		// }
 	});
 };
 

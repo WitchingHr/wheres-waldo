@@ -1,10 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore, getDocs, collection } from "firebase/firestore";
-import { GoogleAuthProvider, getAuth, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
+import { GoogleAuthProvider, getAuth, signInWithPopup, signOut } from "firebase/auth";
 import ReactObserver from 'react-event-observer';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
