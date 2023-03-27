@@ -1,5 +1,9 @@
 # Where's Waldo
 
+<img width="1470" alt="Screenshot 2023-03-27 at 4 08 40 PM" src="https://user-images.githubusercontent.com/41353202/228055672-5013bdbe-9be9-4ca6-a8c6-786b24642752.png">
+<img width="1470" alt="Screenshot 2023-03-27 at 4 10 50 PM" src="https://user-images.githubusercontent.com/41353202/228055647-7cf487e9-9d33-446f-9299-ce73925da956.png">
+
+
 ## Abstract
 Where's Waldo game created for The Odin Project curriculum. 
 ### Gameplay:
@@ -58,14 +62,23 @@ Once all of that was set up, writing the actual tests was a no brainer and I lea
 ### Project Functionality:
 
 On render, the App fetches server data from the database, which includes leaderboard data, and images and coordinates for each level.
+
 The user may login through Google authentication to display the "Personal Best" section of the leaderboard. 
+
 Three "level buttons" are displayed that the user may choose from. When one of the buttons is pressed, the fetched data is sent through various functions to sort and extract the data for the specific level. Specifically, the image source for the level and the coordinates for each character. 
+
 When the image loads, the width of the image is measured and used to apply a correction to the coordinates (which by default are scaled for a 1000px image). If the window is resized, the function will retrigger, applying another correction. 
+
 A start button is rendered over the image (which is blurred initially). When the user clicks the start button, a countdown begins and state is dispatched as `playing: true`. A `useEffect` watches this state and sets time with `useRef` and `Date.now()`. 
+
 The blur filter on the image is then removed and the user can begin to look for each character. The user can click on the image and a modal will appear at the click location so that a choice can be submitted. When a choice is selected, the click coordinates are compared against the coordinate data of the chosen character. If correct, the `state.objective` state will be updated for that character. If incorrect, an animation is triggered to let the user know that an incorrect choice was made. 
+
 Once all characters are found, a `useEffect` that tracks `state.objective` will take note of the time and compare it to the saved time ref to get the total time (in seconds) that it took for the user to complete the level. If the user is signed in, this time gets sent to the server and added to the leaderboard. A "Next Level" modal appears, displaying the completion time and a button that the user can click to go to the next level. 
+
 Steps are repeated for each of the following levels. 
+
 Once level 3 is complete, the user will be taken back to the homepage where the leaderboard is displayed so they can see their times. 
+
 This is the basic over view of how the app functions. 
 
 
