@@ -1,37 +1,16 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
+import { customRender } from "../../test/test-util";
 import LevelButton from "./LevelButton";
 
 it("should disable the button when level is equal to name", () => {
-  render(
-    <LevelButton
-      name={1}
-      level={1}
-      setLevel={() => null}
-      setObjective={() => null}
-      setPlaying={() => null}
-      setHideButton={() => null}
-      setText={() => null}
-      setViewLeader={() => null}
-    />
-  );
-  const button = screen.getByRole("button");
-  expect(button).toBeDisabled();
+	customRender(<LevelButton name={1} />, { providerProps: { level: 1 } });
+	const button = screen.getByRole("button");
+	expect(button).toBeDisabled();
 });
 
 it("should enable the button when level is not equal to name", () => {
-  render(
-    <LevelButton
-      name={1}
-      level={2}
-      setLevel={() => null}
-      setObjective={() => null}
-      setPlaying={() => null}
-      setHideButton={() => null}
-      setText={() => null}
-      setViewLeader={() => null}
-    />
-  );
-  const button = screen.getByRole("button");
-  expect(button).not.toBeDisabled();
+	customRender(<LevelButton name={1} />, { providerProps: { level: 2 } });
+	const button = screen.getByRole("button");
+	expect(button).not.toBeDisabled();
 });

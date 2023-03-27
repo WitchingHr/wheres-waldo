@@ -18,10 +18,6 @@ import { usePositionOffset, updateCoordinatesOnResize } from "../../util";
 // Types:
 import { Data, Coordinates, Position } from "../../types";
 
-interface BoardProps {
-	data: Data[];
-}
-
 let coordinates: Coordinates = [];
 
 const useDataSort = (data: Data[], level: number): string => {
@@ -35,7 +31,7 @@ const useDataSort = (data: Data[], level: number): string => {
 };
 
 // Board component:
-const Board: FC<PropsWithChildren<BoardProps>> = ({ data, children }) => {
+const Board: FC<PropsWithChildren> = ({ children }) => {
 	// State:
 	const state = useStateContext();
 	// Sets modal location to click position
@@ -49,7 +45,7 @@ const Board: FC<PropsWithChildren<BoardProps>> = ({ data, children }) => {
 	// Get image source before paint
 	useLayoutEffect(() => {
 		if (state.level !== null) {
-			const src = useDataSort(data, state.level);
+			const src = useDataSort(state.coordinatesData, state.level);
 			if (imageRef.current !== null) {
 				imageRef.current.src = src;
 			}
@@ -99,7 +95,10 @@ const Board: FC<PropsWithChildren<BoardProps>> = ({ data, children }) => {
 	};
 
 	return (
-		<div className="relative z-10 mx-2 overflow-hidden rounded-md border bg-white">
+		<div
+			data-testid="board"
+			className="relative z-10 mx-2 overflow-hidden rounded-md border bg-white"
+		>
 			<img
 				alt=""
 				src=""

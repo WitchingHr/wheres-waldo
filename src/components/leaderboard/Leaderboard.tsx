@@ -1,21 +1,14 @@
 import React, { FC } from "react";
+import { useStateContext } from "../../reducer";
 import waldo from "../../assets/Waldo.jpg";
 import odlaw from "../../assets/Odlaw.jpg";
 import wizard from "../../assets/Wizard.jpg";
 
-// Types
-import { LBData } from "../../types";
-interface LeaderboardProps {
-	leaderBoardData: LBData;
-	personalBest: [number, string][] | null;
-}
-
 const levels = [1, 2, 3];
 
-const Leaderboard: FC<LeaderboardProps> = ({
-	leaderBoardData,
-	personalBest,
-}) => {
+const Leaderboard: FC = () => {
+	const state = useStateContext();
+	const { personalBest, leaderBoardData } = state;
 	return (
 		<div className="m-2 mx-auto flex w-11/12 flex-col gap-10 sm:w-11/12 md:w-3/4 lg:w-3/4">
 			<div>

@@ -13,6 +13,14 @@ export interface State {
 		Odlaw: boolean;
 		Wizard: boolean;
 	};
+	isLoading: boolean;
+	personalBest: [number, string][];
+	leaderBoardData: LBData;
+	coordinatesData: CoordinatesData;
+}
+
+export interface CustomRenderOptions {
+	providerProps: State;
 }
 
 export interface Action {
@@ -50,3 +58,12 @@ export type Coordinates = Coordinate[];
 type LBEntry = [number, string];
 type LBLevel = LBEntry[];
 export type LBData = LBLevel[];
+
+type characterData = [string, number, number];
+interface levelData {
+	img: string;
+	waldo: characterData[];
+	odlaw: characterData[];
+	wizard: characterData[];
+}
+type CoordinatesData = levelData[];

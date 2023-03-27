@@ -20,6 +20,7 @@ const LevelButton: FC<ButtonProps> = ({ name }) => {
 		<>
 			{state.level !== name ? (
 				<button
+					data-testid={`level-${name}`}
 					onClick={handleClick}
 					className="border px-2 text-blue-500 transition duration-200 hover:bg-slate-200"
 				>
@@ -27,6 +28,7 @@ const LevelButton: FC<ButtonProps> = ({ name }) => {
 				</button>
 			) : (
 				<button
+					data-testid={`level-${name}`}
 					onClick={handleClick}
 					disabled
 					className="border px-2 font-bold text-red-600"

@@ -16,6 +16,7 @@ const Characters: FC = () => {
 	const { Waldo, Odlaw, Wizard } = state.objective;
 	return (
 		<div
+			data-testid="characters"
 			className={
 				"z-0 mr-4 flex h-10 translate-y-10 items-center opacity-0 " +
 				(state.level !== null ? "animate-rise" : null)

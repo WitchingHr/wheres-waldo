@@ -9,7 +9,7 @@ import React, {
 
 import { State, Action } from "./types";
 
-const initialState = {
+export const initialState = {
 	level: null,
 	playing: false,
 	hideButton: false,
@@ -20,14 +20,17 @@ const initialState = {
 		Odlaw: false,
 		Wizard: false,
 	},
+	isLoading: true,
+	coordinatesData: [],
+	leaderBoardData: [],
+	personalBest: [],
 };
 
-const StateContext = createContext<State>(initialState);
-const DispatchContext = createContext<Dispatch<Action>>(() => null);
+export const StateContext = createContext<State>(initialState);
+export const DispatchContext = createContext<Dispatch<Action>>(() => null);
 
 const StateProvider: FC<PropsWithChildren> = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
-
 	return (
 		<StateContext.Provider value={state}>
 			<DispatchContext.Provider value={dispatch}>
@@ -47,8 +50,16 @@ export const useDispatchContext = () => {
 	return useContext(DispatchContext);
 };
 
-const reducer = (state = initialState, action: Action) => {
+export const reducer = (state = initialState, action: Action) => {
 	switch (action.type) {
+		case "SET_DATA":
+			return {
+				...state,
+				isLoading: false,
+				coordinatesData: action.payload.coordinatesData,
+				leaderBoardData: action.payload.leaderBoardData,
+				personalBest: action.payload.personalBest,
+			};
 		case "SET_LEVEL":
 			return {
 				...state,
