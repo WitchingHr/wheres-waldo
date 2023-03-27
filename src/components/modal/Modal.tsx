@@ -11,6 +11,7 @@ const Modal: FC<ModalProps> = ({ time }) => {
 	const state = useStateContext();
 	const dispatch = useDispatchContext();
 
+	// Go to next level. If level 3, go to leaderboard
 	const handleNextLevel = () => {
 		if (state.level === null) return;
 		if (state.level !== 3) {

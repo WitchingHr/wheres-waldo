@@ -33,6 +33,7 @@ const PickerButton: FC<PickerButtonProps> = ({
 	// Click position
 	const { x, y } = clickPos;
 
+	// Select character from picker modal, compare coordinates
 	const handleClick = () => {
 		// Character coordinates
 		const [xChar, yChar] = coordinate;

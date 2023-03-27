@@ -2,19 +2,22 @@ import React, { FC, useReducer, PropsWithChildren } from "react";
 import fs from "fs";
 import path from "path";
 import { render } from "@testing-library/react";
-import { Coordinates } from "../types";
 import { DispatchContext, StateContext } from "../reducer";
 import { reducer } from "../reducer";
 
+// Importing the css file to be used in tests
 const cssFile = fs.readFileSync(
 	path.resolve(__dirname, "../../dist/output.css"),
 	"utf8"
 );
 
+// Types:
 interface StateProviderProps {
 	initState: any;
 }
 
+// Mocking the StateProvider component and reducer for tests
+// Can pass in any state to test
 const StateProvider: FC<PropsWithChildren<StateProviderProps>> = ({
 	children,
 	initState,
@@ -29,6 +32,8 @@ const StateProvider: FC<PropsWithChildren<StateProviderProps>> = ({
 	);
 };
 
+// Custom render function to wrap the component in the StateProvider
+// and add the css file to the document head
 export const customRender = (
 	ui: React.ReactElement,
 	{ providerProps }: { providerProps: any }
@@ -42,21 +47,7 @@ export const customRender = (
 	return { ...container };
 };
 
-// export const customRender = (
-// 	ui: React.ReactElement,
-// 	{ providerProps }: { providerProps: any }
-// ) => {
-// 	const { container } = render(
-// 		<StateContext.Provider value={providerProps}>
-// 			{ui}
-// 		</StateContext.Provider>
-// 	);
-// 	const style = document.createElement("style");
-// 	style.innerHTML = cssFile;
-// 	document.head.appendChild(style);
-// 	return { ...container };
-// };
-
+// Mock data for tests
 export const coordinatesData = [
 	{
 		odlaw: ["Odlaw", 99, 231],
@@ -89,15 +80,3 @@ export const personalBest = [
 	[6.826, "Matt T"],
 	[4.266, "Matt T"],
 ];
-
-export const coordinates: Coordinates = [
-	{ char: "waldo", coordinate: [0, 0] },
-	{ char: "odlaw", coordinate: [0, 0] },
-	{ char: "wizard", coordinate: [0, 0] },
-];
-
-export const objective = {
-	Waldo: false,
-	Odlaw: false,
-	Wizard: false,
-};

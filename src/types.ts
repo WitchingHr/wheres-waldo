@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction } from "react";
-
 // Types:
 
 export interface State {
@@ -14,9 +12,9 @@ export interface State {
 		Wizard: boolean;
 	};
 	isLoading: boolean;
-	personalBest: [number, string][];
-	leaderBoardData: LBData;
-	coordinatesData: CoordinatesData;
+	personalBest: [number, string][] | null;
+	leaderBoardData: LBData | null;
+	coordinatesData: CoordinatesData | null;
 }
 
 export interface CustomRenderOptions {
@@ -36,11 +34,6 @@ export interface Objective {
 
 export interface Data {
 	[key: string]: any;
-}
-
-export interface ObjectiveCon {
-	objective: Objective;
-	setObjective: Dispatch<SetStateAction<Objective>>;
 }
 
 export interface Position {

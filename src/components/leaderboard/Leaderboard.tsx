@@ -4,8 +4,6 @@ import waldo from "../../assets/Waldo.jpg";
 import odlaw from "../../assets/Odlaw.jpg";
 import wizard from "../../assets/Wizard.jpg";
 
-const levels = [1, 2, 3];
-
 const Leaderboard: FC = () => {
 	const state = useStateContext();
 	const { personalBest, leaderBoardData } = state;
@@ -84,3 +82,5 @@ const Leaderboard: FC = () => {
 };
 
 export default Leaderboard;
+
+const levels = [1, 2, 3];

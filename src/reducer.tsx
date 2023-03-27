@@ -21,9 +21,9 @@ export const initialState = {
 		Wizard: false,
 	},
 	isLoading: true,
-	coordinatesData: [],
-	leaderBoardData: [],
-	personalBest: [],
+	coordinatesData: null,
+	leaderBoardData: null,
+	personalBest: null,
 };
 
 export const StateContext = createContext<State>(initialState);
@@ -118,7 +118,7 @@ export const reducer = (state = initialState, action: Action) => {
 				...state,
 				level: null,
 				viewLeader: true,
-				setObjective: {
+				objective: {
 					Waldo: false,
 					Odlaw: false,
 					Wizard: false,

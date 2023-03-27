@@ -20,6 +20,7 @@ import { Data, Coordinates, Position } from "../../types";
 
 let coordinates: Coordinates = [];
 
+// Filter data based on level
 const useDataSort = (data: Data[], level: number): string => {
 	const d = data[level - 1];
 	coordinates = [
@@ -66,6 +67,7 @@ const Board: FC<PropsWithChildren> = ({ children }) => {
 		}
 	}, [state.playing]);
 
+	// Recalculate coordinates on window resize
 	const onResize = () => {
 		if (state.playing === true) {
 			coordinates = updateCoordinatesOnResize(imageRef, widthRef, coordinates);
@@ -76,7 +78,7 @@ const Board: FC<PropsWithChildren> = ({ children }) => {
 		}
 	};
 
-	// Recalculate coordinates on window resize
+	// Add listener for window resize
 	useEffect(() => {
 		window.addEventListener("resize", onResize);
 		return () => window.removeEventListener("resize", onResize);

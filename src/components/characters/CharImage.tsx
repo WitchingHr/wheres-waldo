@@ -7,7 +7,6 @@ interface CharImageProps {
 }
 
 // CharImage component:
-// - will show low opacity image for character until he is found
 const CharImage: FC<CharImageProps> = ({ src, char }) => {
 	return (
 		<img

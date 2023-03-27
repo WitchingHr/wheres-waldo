@@ -5,9 +5,9 @@ import React, {
 	useEffect,
 	useState,
 } from "react";
+
 import { useStateContext, useDispatchContext } from "../../reducer";
 import { signInUser, signOutUser, firebaseObserver } from "../../firebase";
-// Logo
 import Logo from "../../assets/logo.png";
 
 // Types
@@ -36,6 +36,7 @@ const Header: FC<HeaderProps> = ({ signedIn, setSignedIn }) => {
 		return () => firebaseObserver.unsubscribe("authStateChanged");
 	}, []);
 
+	// Open leaderboard, hide board
 	const handleClick = () => {
 		dispatch({ type: "OPEN_LEADERBOARD" });
 	};

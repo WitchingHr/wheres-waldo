@@ -113,25 +113,53 @@ describe("Wrapper when finished loading", () => {
 		expect(board).toBeInTheDocument();
 	});
 
-	// it("should render the leaderboard when clicking view leaderboard", async () => {
-	//   customRender(
-	//     <Wrapper />,
-	//     {providerProps: {
-	//       level: 1,
-	//       objective: {
-	//         Waldo: false,
-	//         Odlaw: false,
-	//         Wizard: false,
-	//       },
-	//       viewLeader: false,
-	//       playing: false,
-	//       hideButton: false,
-	//       text: "Start",
-	//     }}
-	//   );
-	//   const leaderboard = screen.getByText(/view leaderboard/i);
-	//   await user.click(leaderboard);
-	//   const personalBest = screen.getByText(/personal best/i);
-	//   expect(personalBest).toBeInTheDocument();
-	// });
+	it("should render the leaderboard when clicking view leaderboard", async () => {
+		customRender(
+			<Wrapper />,
+			{providerProps: {
+				level: 1,
+				objective: {
+					Waldo: false,
+					Odlaw: false,
+					Wizard: false,
+				},
+				viewLeader: false,
+				playing: false,
+				hideButton: false,
+				text: "Start",
+				isLoading: false,
+				coordinatesData: coordinatesData,
+				leaderBoardData: leaderBoardData,
+				personalBest: personalBest,
+			}}
+		);
+		const leaderboard = screen.getByText(/view leaderboard/i);
+		await user.click(leaderboard);
+		const personalBestHeader = screen.getByText(/personal best/i);
+		expect(personalBestHeader).toBeInTheDocument();
+	});
+
+	it("should render the 'View leaderboard' button when clicking the levelButton", async () => {
+		customRender(
+			<Wrapper />,
+			{
+				providerProps: {
+					level: null,
+					objective: {
+						Waldo: false,
+						Odlaw: false,
+						Wizard: false,
+					},
+					isLoading: false,
+					coordinatesData: coordinatesData,
+					leaderBoardData: leaderBoardData,
+					personalBest: personalBest,
+				},
+			}
+		);
+		const levelButton = screen.getByTestId("level-1");
+		await user.click(levelButton);
+		const leaderboard = screen.getByText(/view leaderboard/i);
+		expect(leaderboard).toBeInTheDocument();
+	});
 });
