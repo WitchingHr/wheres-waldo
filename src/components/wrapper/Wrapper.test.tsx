@@ -46,7 +46,7 @@ describe("Wrapper when finished loading", () => {
 				personalBest: personalBest,
 			},
 		});
-		const leaderboard = screen.getByText(/personal best/i);
+		const leaderboard = screen.getByText(/personal/i);
 		expect(leaderboard).toBeInTheDocument();
 	});
 
@@ -135,7 +135,7 @@ describe("Wrapper when finished loading", () => {
 		);
 		const leaderboard = screen.getByText(/view leaderboard/i);
 		await user.click(leaderboard);
-		const personalBestHeader = screen.getByText(/personal best/i);
+		const personalBestHeader = screen.getByText(/personal/i);
 		expect(personalBestHeader).toBeInTheDocument();
 	});
 

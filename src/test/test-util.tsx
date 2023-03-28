@@ -7,7 +7,7 @@ import { reducer } from "../reducer";
 
 // Importing the css file to be used in tests
 const cssFile = fs.readFileSync(
-	path.resolve(__dirname, "../../dist/output.css"),
+	path.resolve(__dirname, "../../dist/assets/index-a4925fe9.css"),
 	"utf8"
 );
 

@@ -11,7 +11,7 @@ const Leaderboard: FC = () => {
 		<div className="m-2 mx-auto flex w-11/12 flex-col gap-10 sm:w-11/12 md:w-3/4 lg:w-3/4">
 			<div>
 				<div className="border py-1 text-center text-2xl font-bold text-blue-500">
-					Personal Best
+					Personal
 				</div>
 				<ul className="flex">
 					{levels.map((level) => (
